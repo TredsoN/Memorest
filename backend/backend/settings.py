@@ -37,9 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'user',
     'memory',
+
     'graphene_django',  # GraphQL
+    'graphql_jwt.refresh_token.apps.RefreshTokenConfig',  # JWT
+    'graphql_auth',  # GraphQL Auth
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -126,8 +131,45 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Auth
+AUTH_USER_MODEL = 'user.User'
 
 # GraphQL
 GRAPHENE = {
-    'SCHEMA': 'backend.schema.schema'  # Root schema
+    'SCHEMA': 'backend.schema.schema',  # Root schema
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
 }
+
+AUTHENTICATION_BACKENDS = [
+    "graphql_auth.backends.GraphQLAuthBackend",
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+GRAPHQL_JWT = {
+    "JWT_VERIFY_EXPIRATION": True,
+
+    # optional
+    "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
+
+    "JWT_ALLOW_ANY_CLASSES": [
+        "graphql_auth.mutations.Register",
+        "graphql_auth.mutations.VerifyAccount",
+        "graphql_auth.mutations.ObtainJSONWebToken",
+        "user.schema.GenerateVerificationCode",
+    ],
+}
+
+GRAPHQL_AUTH = {
+
+}
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'memorest.auth@gmail.com'
+EMAIL_HOST_PASSWORD = 'memorest123*Zg123'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+SITE_URL = '127.0.0.1:8000'

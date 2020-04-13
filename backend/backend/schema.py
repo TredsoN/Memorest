@@ -1,10 +1,17 @@
 import graphene
 
+from graphql_auth.schema import UserQuery, MeQuery
 
-class Query(graphene.ObjectType):
-    # This class will inherit from multiple Queries
-    # as we begin to add more apps to our project
+from user.schema import AuthMutation
+
+
+class Query(UserQuery, MeQuery, graphene.ObjectType):
     pass
 
 
-schema = graphene.Schema(query=Query)
+class Mutation(AuthMutation, graphene.ObjectType):
+    pass
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
+
