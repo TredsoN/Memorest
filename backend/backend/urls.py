@@ -15,14 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
 from graphene_django.views import GraphQLView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("graphql/", GraphQLView.as_view(graphiql=True)),
-    path('user/reset_password', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('user/password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('user/reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('user/reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('graphql/', GraphQLView.as_view(graphiql=True)),
+    path('user/', include('user.urls')),
 ]
