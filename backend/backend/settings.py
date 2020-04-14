@@ -155,22 +155,24 @@ GRAPHQL_JWT = {
     "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
 
     "JWT_ALLOW_ANY_CLASSES": [
-        "graphql_auth.mutations.Register",
-        "graphql_auth.mutations.VerifyAccount",
-        "graphql_auth.mutations.ObtainJSONWebToken",
+        "user.schema.Register",
+        "user.schema.Login",
+        "user.schema.PasswordReset",
         "user.schema.GenerateVerificationCode",
     ],
 }
 
 GRAPHQL_AUTH = {
-
+    'UPDATE_MUTATION_FIELDS': ['username', ],
 }
 
+
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'memorest.auth@gmail.com'
-EMAIL_HOST_PASSWORD = 'memorest123*Zg123'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtpdm.aliyun.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'memorest@email.streack.cn'
+EMAIL_HOST_PASSWORD = 'MEmorest123'
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'fforkboat@gmail.com'
 
 SITE_URL = '127.0.0.1:8000'

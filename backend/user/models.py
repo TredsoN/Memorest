@@ -38,8 +38,8 @@ class VerificationCode(models.Model):
 
         send_mail(
             subject="Memorest 验证码",
-            from_email="Memorest",
-            message="您的注册验证码为：" + str(code),
+            from_email="memorest@email.streack.cn",
+            message="您的验证码为：" + str(code),
             recipient_list=(
                     email,
             ),
