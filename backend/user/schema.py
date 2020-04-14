@@ -18,7 +18,7 @@ class VerificationCodeType(DjangoObjectType):
 
 class GenerateVerificationCode(Output, graphene.Mutation):
     """
-    获取验证码456
+    获取验证码
 
     参数: \n
     email!: 邮箱地址
