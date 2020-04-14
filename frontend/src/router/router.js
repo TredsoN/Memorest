@@ -1,6 +1,8 @@
 import Router from 'vue-router'
 import Index from '../components/Pages/Index.vue'
 import SignInOrUp from '../components/Pages/SignInOrUp.vue'
+import ChangeInformation from '../components/Pages/ChangeInformation.vue'
+
 
 export default new Router({
     mode: 'history',
@@ -14,6 +16,11 @@ export default new Router({
             path: '/login',
             name: 'login',
             component: SignInOrUp,
+        },
+        {
+            path: '/page1',
+            name: 'page1',
+            component: ChangeInformation,
         }
     ]
 })
