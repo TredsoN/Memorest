@@ -1,15 +1,19 @@
-import Vue from 'vue'
 import Router from 'vue-router'
-import Test from '../components/Pages/Test.vue'
-
-Vue.use(Router)
+import Index from '../components/Pages/Index.vue'
+import SignInOrUp from '../components/Pages/SignInOrUp.vue'
 
 export default new Router({
+    mode: 'history',
     routes: [
-      {
-        path: '/',
-        name: 'test',
-        component: Test,
-      }
+        {
+            path: '/',
+            name: 'index',
+            component: Index,
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: SignInOrUp,
+        }
     ]
-  })
+})
