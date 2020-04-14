@@ -19,6 +19,10 @@ class VerificationCodeType(DjangoObjectType):
 
 
 class GenerateVerificationCode(Output, graphene.Mutation):
+    """
+    使用邮箱地址来获取验证码
+    """
+
     verification_code = graphene.Field(VerificationCodeType)
 
     class Arguments:
@@ -32,14 +36,17 @@ class GenerateVerificationCode(Output, graphene.Mutation):
 
 
 class Register(Output, graphene.Mutation):
+    """
+    用户注册
+    """
+
     user = graphene.Field(UserNode)
     token = graphene.String()
 
     class Arguments:
         email = graphene.String(required=True)
         username = graphene.String(required=True)
-        password1 = graphene.String(required=True)
-        password2 = graphene.String(required=True)
+        password = graphene.String(required=True)
         code = graphene.Int(required=True)
 
     @classmethod
@@ -50,6 +57,11 @@ class Register(Output, graphene.Mutation):
     def mutate(self, info, **kwargs):
         try:
             with transaction.atomic():
+                # hack了一下，因为RegisterForm要检查password1是否和password2相同，我又不想重写一个Form来验证了...
+                password = kwargs.pop("password")
+                kwargs["password1"] = password
+                kwargs["password2"] = password
+
                 f = RegisterForm(kwargs)
                 if f.is_valid():
                     code = kwargs.get("code")
