@@ -26,18 +26,12 @@ class GenerateVerificationCode(Output, graphene.Mutation):
     返回值: \n
     success: 操作是否成功 \n
     errors: 如果操作失败，返回失败原因 \n
-    verification_code \n
-    \t code: 验证码 \n
-    \t email: 对应邮箱 \n
     """
-
-    verification_code = graphene.Field(VerificationCodeType)
-
     class Arguments:
         email = graphene.String(required=True)
 
     def mutate(self, info, email):
-        return GenerateVerificationCode(success=True, verification_code=VerificationCode.generate_code(email))
+        return GenerateVerificationCode(success=True)
 
 
 class Register(Output, graphene.Mutation):
