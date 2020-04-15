@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',  # JWT
     'graphql_auth',  # GraphQL Auth
     'django_filters',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -180,3 +182,5 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'fforkboat@gmail.com'
 
 SITE_URL = '127.0.0.1:8000'
+
+CORS_ORIGIN_ALLOW_ALL = True
