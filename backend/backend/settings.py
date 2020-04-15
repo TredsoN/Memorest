@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from datetime import timedelta
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -25,7 +27,7 @@ SECRET_KEY = '0bw76$-yfj^v&e21fo9o&3#4ha@(dx8egq2^+*!nw3h-pi6=bh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', ]
 
 
 # Application definition
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',  # JWT
     'graphql_auth',  # GraphQL Auth
     'django_filters',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -130,6 +134,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/home/memorest/static/'
 
 # Auth
 AUTH_USER_MODEL = 'user.User'
@@ -149,27 +154,33 @@ AUTHENTICATION_BACKENDS = [
 
 GRAPHQL_JWT = {
     "JWT_VERIFY_EXPIRATION": True,
+    'JWT_EXPIRATION_DELTA': timedelta(days=30),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=30),
 
     # optional
     "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
 
     "JWT_ALLOW_ANY_CLASSES": [
-        "graphql_auth.mutations.Register",
-        "graphql_auth.mutations.VerifyAccount",
-        "graphql_auth.mutations.ObtainJSONWebToken",
+        "user.schema.Register",
+        "user.schema.Login",
+        "user.schema.PasswordReset",
         "user.schema.GenerateVerificationCode",
     ],
 }
 
 GRAPHQL_AUTH = {
-
+    'UPDATE_MUTATION_FIELDS': ['username', ],
 }
 
+
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'memorest.auth@gmail.com'
-EMAIL_HOST_PASSWORD = 'memorest123*Zg123'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtpdm.aliyun.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'memorest@email.streack.cn'
+EMAIL_HOST_PASSWORD = 'MEmorest123'
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'fforkboat@gmail.com'
 
 SITE_URL = '127.0.0.1:8000'
+
+CORS_ORIGIN_ALLOW_ALL = True
