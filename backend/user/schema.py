@@ -31,7 +31,9 @@ class GenerateVerificationCode(Output, graphene.Mutation):
         email = graphene.String(required=True)
 
     def mutate(self, info, email):
-        VerificationCode.generate_code(email)
+        res, msg = VerificationCode.generate_code(email)
+        if not res:
+            return GenerateVerificationCode(success=False, errors={"email": msg})
         return GenerateVerificationCode(success=True)
 
 
@@ -213,7 +215,6 @@ class PasswordChange(Output, graphene.Mutation):
             payload = PasswordChange.login(None, info, password=new_password,
                                            **{user.USERNAME_FIELD: getattr(user, user.USERNAME_FIELD)})
             return PasswordChange(success=True, token=getattr(payload, "token"))
-
 
 
 class AuthMutation(graphene.ObjectType):

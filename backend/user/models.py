@@ -1,3 +1,4 @@
+import datetime
 import os
 import random
 
@@ -26,25 +27,34 @@ class User(AbstractUser):
 class VerificationCode(models.Model):
     email = models.EmailField(max_length=100, unique=True, db_index=True, null=False)
     code = models.IntegerField(null=False)
+    last_updated = models.DateTimeField(auto_now=True)
 
     @staticmethod
     def generate_code(email):
         item = VerificationCode.objects.filter(email=email).first()
         if item is None:
             item = VerificationCode(email=email)
+        else:
+            time_diff = datetime.datetime.now(
+                tz=datetime.timezone(datetime.timedelta(hours=8), 'Asia/Shanghai')) - item.last_updated
+
+            if time_diff.total_seconds() < 60:
+                return False, "一分钟之内只能发送一条验证码"
+
         code = random.randint(1000, 9999)
         item.code = code
         item.save()
 
-        send_mail(
+        res = send_mail(
             subject="Memorest 验证码",
             from_email="memorest@email.streack.cn",
             message="您的验证码为：" + str(code),
             recipient_list=(
-                    email,
+                email,
             ),
-            fail_silently=False,
+            fail_silently=True,
         )
+        if res == 0:
+            return False, "邮件因未知原因发送失败，请稍后重试"
 
-        return item
-
+        return True, ""
