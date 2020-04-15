@@ -1,7 +1,7 @@
 <template>
     <div id="test">
         <input v-model="username"/>
-        <button @click="setGlobal"></button>
+        <button @click="setGlobal">个人中心</button>
     </div>
 </template>
 
@@ -17,11 +17,11 @@ export default {
     methods:{
         setGlobal() {
             var user = {
-                name:this.username,
-                email:""
+                name: this.username,
+                email: "972075430@qq.com"
             }
             Vue.prototype.$user = user;
-            this.$router.push({path:'/Page1'});
+            this.$router.push({path:'/personal'});
         }
     }
 }

@@ -1,19 +1,15 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router/router.js'
-import ApolloClient from 'apollo-boost' 
-import VueApollo from 'vue-apollo'
-
-Vue.use(VueApollo);
+import router from './utils/router.js'
+import apolloProvider from './utils/apolloClient.js'
 
 Vue.config.productionTip = false
 
-const apolloClient = new ApolloClient({
-  uri: 'http://localhost:3000/graphql'
-})
-
-const apolloProvider = new VueApollo({
-  defaultClient: apolloClient,
+router.beforeEach((to, from, next) => {
+  if(to.meta.title) {
+    document.title = to.meta.title
+  }
+  next();
 })
 
 new Vue({
