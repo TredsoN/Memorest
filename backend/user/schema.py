@@ -31,6 +31,7 @@ class GenerateVerificationCode(Output, graphene.Mutation):
         email = graphene.String(required=True)
 
     def mutate(self, info, email):
+        VerificationCode.generate_code(email)
         return GenerateVerificationCode(success=True)
 
 
