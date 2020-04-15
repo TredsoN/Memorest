@@ -5,6 +5,7 @@ import Personal from '../components/Pages/PersonalPage.vue'
 import InfoChange from '../components/Pages/InfoChangePage.vue'
 import PasswordChange from '../components/Pages/PasswordChangePage.vue'
 import PasswordFind from '../components/Pages/PasswordFindPage.vue'
+// import SignInOrUp from '../components/Pages/SignInOrUp.vue'
 
 Vue.use(Router)
 

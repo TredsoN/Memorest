@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './utils/router.js'
 import apolloProvider from './utils/apolloClient.js'
+import ElementUI from 'element-ui'
 
 
 router.beforeEach((to, from, next) => {
@@ -10,6 +11,7 @@ router.beforeEach((to, from, next) => {
   }
   next();
 })
+
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
 
