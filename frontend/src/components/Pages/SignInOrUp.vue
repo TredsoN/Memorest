@@ -213,7 +213,6 @@ import gql from "graphql-tag";
                         // 如果校验成功，message 为 ''
                         return;
                     }
-                    console.log(this.signUpForm.email);
                     this.$apollo.mutate({
                         mutation: GenerateVerificationCode,
                         variables: {
