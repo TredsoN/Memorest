@@ -102,14 +102,14 @@ import gql from "graphql-tag";
             return {
                 activeTag: 'signIn',
                 signInForm: {
-                    usernameOrEmail: 'cycychenyi',
-                    password: '12345678'
+                    usernameOrEmail: '',
+                    password: ''
                 },
                 signUpForm: {
-                    email: 'chenyi111@whu.edu.cn',
-                    username: 'cycychenyi',
-                    password: '12345678',
-                    checkPassword: '12345678',
+                    email: '',
+                    username: '',
+                    password: '',
+                    checkPassword: '',
                     code: '',
                     count: waitTime
                 },
