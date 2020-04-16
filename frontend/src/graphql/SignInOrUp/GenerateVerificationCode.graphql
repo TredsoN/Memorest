@@ -1,0 +1,6 @@
+mutation GenerateVerificationCode ($email: String!) {
+    generateVerificationCode (email: $email) {
+        success
+        errors
+    }
+}

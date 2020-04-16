@@ -2,15 +2,23 @@
     <div>
         目前啥都没有的主界面
         <br/>
-        <router-link to="/login">
-            <el-button>登录</el-button>
+        <router-link :to="{ name: 'login' }">
+            <el-button v-if="!isLogined">登录</el-button>
+        </router-link>
+        <router-link :to="{ name: 'infochange' }">
+            <el-button v-if="isLogined">个人中心</el-button>
         </router-link>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'Index'
+        name: 'Index',
+        data() {
+            return {
+                isLogined: localStorage.getItem('token'),
+            }
+        }
     }
 </script>
 
