@@ -1,6 +1,8 @@
 <template>
     <div>
-        <button @click="goBack">返回</button>
+        <router-link :to="{ name: 'infochange'}">
+            <el-button>返回</el-button>
+        </router-link>
 
         <el-form :model="changePsForm" ref="changePsForm" :rules="changePsRules" label-position="right">
             <el-form-item prop="oldpswd" label="旧密码">
@@ -13,12 +15,14 @@
                 <el-input v-model="changePsForm.newpswd2" show-password></el-input>
             </el-form-item>
         </el-form>
-        <button @click="submit">确定</button>
+
+        <el-button @click="submit">确定</el-button>
     </div>
 </template>
 
 <script>
-import gql from 'graphql-tag';
+import RefershToken from '../../graphql/RefreshToken.graphql'
+import UpdatePassword from '../../graphql/UserInfoPages/PasswordChange.graphql'
 
 export default {
     data() {
@@ -77,34 +81,50 @@ export default {
         }
     },
     methods: {
+        refreshtoken() {
+            this.$apollo.mutate({
+                mutation: RefershToken,
+                variables: {
+                    rtoken: localStorage.getItem('refreshtoken')
+                },
+            }).then(data=>{
+                console.log(data);
+                if(data.data.refreshToken.success){
+                    localStorage.setItem('token', data.data.refreshToken.token);
+                    localStorage.setItem('refreshtoken', data.data.refreshToken.refreshToken);
+                }
+            }).catch(error=>{
+                console.log(error);
+            });
+        },
+        updatepassword(){
+            this.$apollo.mutate({
+                mutation: UpdatePassword,
+                variables: {
+                    np: this.changePsForm.newpswd1,
+                    op: this.changePsForm.oldpswd
+                },
+                client: 'withtoken'
+            }).then(data=>{
+                console.log(data);
+                if(data.data.passwordChange.success){
+                    alert('修改成功');
+                    localStorage.setItem('token', data.data.passwordChange.token);
+                    localStorage.setItem('refreshtoken', data.data.passwordChange.refreshToken);
+                    this.$router.push({name: 'personal'});
+                }
+            }).catch(error=>{
+                alert(error);
+            });
+        },
         submit() {
             this.$refs['changePsForm'].validate((valid)=>{
                 if(!valid){
                     return;
                 }
-                this.$apollo.mutate({
-                    mutation: gql`mutation($np: String!, $op: String!){
-                        passwordChange(newPassword: $np, oldPassword: $op){
-                            success
-                            errors
-                            token
-                        }
-                    }`,
-                    variables: {
-                        np: this.newpassword1,
-                        op: this.oldpassword
-                    },
-                    client: 'withtoken'
-                }).then(data=>{
-                    var result = JSON.parse(JSON.stringify(data));
-                    console.log(result.data);
-                }).catch(error=>{
-                    alert(error);
-                });
+                this.refreshtoken();
+                this.updatepassword();
             });
-        },
-        goBack() {
-            this.$router.go(-1);
         }
     }
 }

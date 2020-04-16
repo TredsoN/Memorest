@@ -1,6 +1,8 @@
 <template>
     <div>
-        <button @click="goBack">返回</button>
+        <router-link :to="{ name: 'personal'}">
+            <el-button>返回</el-button>
+        </router-link>
 
         <el-form :model="changeForm" ref="changeForm" :rules="changeRules" label-position="right">
             <el-form-item prop="username" label="用户名">
@@ -8,13 +10,17 @@
             </el-form-item>
         </el-form>
 
-        <button @click="submit">确定</button>
-        <button @click="gotoPassChange">修改密码</button>
+        <el-button @click="submit">确定</el-button>
+
+        <router-link :to="{ name: 'passwordchange' }">
+            <el-button>修改密码</el-button>
+        </router-link>
     </div>
 </template>
 
 <script>
-import gql from 'graphql-tag';
+import RefershToken from '../../graphql/RefreshToken.graphql'
+import UpdateUsername from '../../graphql/UserInfoPages/InfoChange.graphql'
 
 export default {
     inject: ['reload'],
@@ -44,35 +50,52 @@ export default {
         }
     },
     methods:{
+        refreshtoken() {
+            this.$apollo.mutate({
+                mutation: RefershToken,
+                variables: {
+                    rtoken: localStorage.getItem('refreshtoken')
+                },
+            }).then(data=>{
+                console.log(data);
+                if(data.data.refreshToken.success){
+                    localStorage.setItem('token', data.data.refreshToken.token);
+                    localStorage.setItem('refreshtoken', data.data.refreshToken.refreshToken);
+                }
+            }).catch(error=>{
+                console.log(error);
+            });
+        },
+        updateusername() {
+            this.$apollo.mutate({
+                mutation: UpdateUsername,
+                variables: {
+                    username: this.changeForm.username
+                },
+                client: 'withtoken'
+            }).then(data=>{
+                console.log(data);
+                if(data.data.updateUsername.success){
+                    alert('修改成功');
+                    var newuser = JSON.parse(localStorage.getItem('user'));
+                    newuser.name = this.changeForm.username;
+                    localStorage.setItem('user', JSON.stringify(newuser));
+                    localStorage.setItem('token', data.data.updateUsername.token);
+                    localStorage.setItem('refreshtoken', data.data.updateUsername.refreshToken);
+                    this.$router.push({name: 'personal'});
+                }
+            }).catch(error=>{
+                console.log(error);
+            });
+        },
         submit() {
             this.$refs['changeForm'].validate((valid)=>{
                 if(!valid){
                     return;
                 }
-                this.$apollo.mutate({
-                    mutation: gql`mutation($username: String!){
-                        updateUsername(username: $username){
-                            success
-                            errors
-                        }
-                    }`,
-                    variables: {
-                        username: this.changeForm.username
-                    },
-                    client: 'withtoken'
-                }).then(data=>{
-                    var result = JSON.parse(JSON.stringify(data));
-                    console.log(result.data);
-                }).catch(error=>{
-                    alert(error);
-                });
+                this.refreshtoken();
+                this.updateusername();
             });
-        },
-        gotoPassChange() {
-            this.$router.push({path:'/passwordchange'});
-        },
-        goBack() {
-            this.$router.go(-1);
         }
     }
 }
