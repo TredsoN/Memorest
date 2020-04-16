@@ -7,46 +7,46 @@ import PasswordChange from '../components/Pages/PasswordChangePage.vue'
 import PasswordFind from '../components/Pages/PasswordFindPage.vue'
 // import SignInOrUp from '../components/Pages/SignInOrUp.vue'
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
-    routes: [
-      {
-        path: '/',
-        name: 'test',
-        component: TestMain,
-      },
-      {
-        path: '/personal',
-        name: 'personal',
-        component: Personal,
-        meta: {
-          title: '个人中心'
-        }
-      },
-      {
-        path: '/infochange',
-        name: 'infochange',
-        component: InfoChange,
-        meta: {
-          title: '修改信息'
-        }
-      },
-      {
-        path: '/passwordchange',
-        name: 'passwordchange',
-        component: PasswordChange,
-        meta: {
-          title: '修改密码'
-        }
-      },
-      {
-        path: '/passwordfind',
-        name: 'passwordfind',
-        component: PasswordFind,
-        meta: {
-          title: '找回密码'
-        }
+  routes: [
+    {
+      path: '/',
+      name: 'test',
+      component: TestMain,
+    },
+    {
+      path: '/personal',
+      name: 'personal',
+      component: Personal,
+      meta: {
+        title: '个人中心'
       }
-    ]
-  })
+    },
+    {
+      path: '/infochange',
+      name: 'infochange',
+      component: InfoChange,
+      meta: {
+        title: '修改信息'
+      }
+    },
+    {
+      path: '/passwordchange',
+      name: 'passwordchange',
+      component: PasswordChange,
+      meta: {
+        title: '修改密码'
+      }
+    },
+    {
+      path: '/passwordfind',
+      name: 'passwordfind',
+      component: PasswordFind,
+      meta: {
+        title: '找回密码'
+      }
+    }
+  ]
+});

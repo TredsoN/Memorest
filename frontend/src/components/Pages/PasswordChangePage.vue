@@ -43,7 +43,7 @@ export default {
             return callback();
         };
         var newpswd2 = (rule, value, callback) =>{
-            if(value ){
+            if(value !== this.changePsForm.newpswd1){
                 return callback(new Error('两次输入密码不一致'));
             }
             return callback();
@@ -83,7 +83,7 @@ export default {
                     return;
                 }
                 this.$apollo.mutate({
-                    mutation: gql`mutation($op: String!, $np: String!){
+                    mutation: gql`mutation($np: String!, $op: String!){
                         passwordChange(newPassword: $np, oldPassword: $op){
                             success
                             errors
@@ -96,7 +96,8 @@ export default {
                     },
                     client: 'withtoken'
                 }).then(data=>{
-                    alert(data);
+                    var result = JSON.parse(JSON.stringify(data));
+                    console.log(result.data);
                 }).catch(error=>{
                     alert(error);
                 });

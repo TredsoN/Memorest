@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import gql from 'graphql-tag';
 
 export default {
@@ -30,7 +29,7 @@ export default {
             return callback();
         };
         return {
-            name: Vue.prototype.$user.name,
+            name: JSON.parse(localStorage.getItem('user'))['name'],
             changeForm: {
                 username: ''
             },
@@ -63,9 +62,7 @@ export default {
                     client: 'withtoken'
                 }).then(data=>{
                     var result = JSON.parse(JSON.stringify(data));
-                    if(!result['data']['updateUsername']['success']){
-                        alert("修改失败");
-                    }
+                    console.log(result.data);
                 }).catch(error=>{
                     alert(error);
                 });
