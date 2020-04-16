@@ -61,6 +61,6 @@ class VerificationCode(models.Model):
         except SMTPException as e:
             item.is_last_mail_successful = False
             item.save()
-            return False, e
+            return False, str(e)
 
         return True, ""
