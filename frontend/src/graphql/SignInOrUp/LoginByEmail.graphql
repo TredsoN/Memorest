@@ -3,5 +3,9 @@ mutation Login($email: String!, $password: String!) {
         success
         errors
         token
+        user {
+            username
+            email
+        }
     }
 }

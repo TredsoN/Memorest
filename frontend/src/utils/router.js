@@ -7,20 +7,28 @@ import PasswordFind from '../components/Pages/PasswordFindPage.vue'
 import Index from '../components/Pages/Index'
 import Login from '../components/Pages/SignInOrUp'
 
+
 Vue.use(Router);
 
-export default new Router({
+
+const router = new Router({
     mode: 'history',
     routes: [
         {
             path: '/',
             name: 'index',
             component: Index,
+            meta: {
+                title: '记忆森林'
+            }
         },
         {
             path: '/login',
             name: 'login',
             component: Login,
+            meta: {
+                title: '登录'
+            }
         },
         {
             path: '/personal',
@@ -56,3 +64,14 @@ export default new Router({
         }
     ]
 });
+
+
+router.beforeEach((to, meta, next) => {
+    if (to.meta.title) {
+        document.title = to.meta.title;
+    }
+    next();
+});
+
+
+export default router

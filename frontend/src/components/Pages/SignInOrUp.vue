@@ -253,6 +253,11 @@ import gql from "graphql-tag";
                         } else {
                             // TODO: 待测试，设置 token + 界面跳转，邮件服务未知错误
                             localStorage.setItem('token', result.token);
+                            const user = {
+                                name: result.user.username,
+                                email: result.user.email
+                            };
+                            localStorage.setItem('user', JSON.stringify(user));
                             this.$router.push({
                                 name: 'index'
                             });
@@ -289,6 +294,11 @@ import gql from "graphql-tag";
                             }
                         } else {
                             localStorage.setItem('token', result.token);
+                            const user = {
+                                name: result.user.username,
+                                email: result.user.email
+                            };
+                            localStorage.setItem('user', JSON.stringify(user));
                             this.$router.push({
                                 name: 'index'
                             });
