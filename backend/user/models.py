@@ -1,6 +1,7 @@
 import datetime
 import os
 import random
+from smtplib import SMTPException
 
 from django.core.mail import send_mail
 from django.db import models
@@ -28,6 +29,7 @@ class VerificationCode(models.Model):
     email = models.EmailField(max_length=100, unique=True, db_index=True, null=False)
     code = models.IntegerField(null=False)
     last_updated = models.DateTimeField(auto_now=True)
+    is_last_mail_successful = models.BooleanField(default=False)
 
     @staticmethod
     def generate_code(email):
@@ -38,23 +40,27 @@ class VerificationCode(models.Model):
             time_diff = datetime.datetime.now(
                 tz=datetime.timezone(datetime.timedelta(hours=8), 'Asia/Shanghai')) - item.last_updated
 
-            if time_diff.total_seconds() < 60:
+            if time_diff.total_seconds() < 60 and item.is_last_mail_successful:
                 return False, "一分钟之内只能发送一条验证码"
 
         code = random.randint(1000, 9999)
         item.code = code
-        item.save()
 
-        res = send_mail(
-            subject="Memorest 验证码",
-            from_email="memorest@email.streack.cn",
-            message="您的验证码为：" + str(code),
-            recipient_list=(
-                email,
-            ),
-            fail_silently=True,
-        )
-        if res == 0:
-            return False, "邮件因未知原因发送失败，请稍后重试"
+        try:
+            send_mail(
+                subject="Memorest 验证码",
+                from_email="memorest@email.streack.cn",
+                message="您的验证码为：" + str(code),
+                recipient_list=(
+                    email,
+                ),
+                fail_silently=False,
+            )
+            item.is_last_mail_successful = True
+            item.save()
+        except SMTPException as e:
+            item.is_last_mail_successful = False
+            item.save()
+            return False, e
 
         return True, ""
