@@ -16,11 +16,13 @@
                     <el-form-item prop="password" style="width:700px">
                         <i slot="label" class="form-label">PASSWORD</i>
                         <el-input style="width:300px" type="password" v-model="signInForm.password" show-password></el-input>
-                        <el-button class="button-inputside"
-                                style="width:100px"
-                                @click="getCode">
-                            forget password?
-                        </el-button>
+                        <router-link :to="{ name: 'passwordfind' }">
+                            <el-button class="button-inputside"
+                                    style="width:100px"
+                                    @click="getCode">
+                                forget password?
+                            </el-button>
+                        </router-link>
                     </el-form-item>
                     <el-button class="button-common" style="margin-top:20px" type="primary" @click="login">START</el-button>
                 </el-form>
@@ -67,6 +69,11 @@
                 </div>
             </el-tab-pane>
         </el-tabs>
+        <router-link :to="{ name: 'index' }">
+            <el-button class="button-inputside" style="width:100px;top:5px;left:0;position:absolute">
+                BACK
+            </el-button>
+        </router-link>
     </div>
 </template>
 
@@ -341,20 +348,13 @@
         background-size:100% 100%;
         overflow: auto;
     }
-    div.form-loginandup {
-        margin: 0 auto;
-        width: 600px;
-    }
-    div.el-form-item__error {
-        font-size: 16px;
-    }
-    div.el-tabs__content {
-        top: 100px;
-    }
-    div.el-tabs__nav-wrap.is-top {
+    div.el-tabs.el-tabs--top {
         top: 50px;
         margin: 0 auto;
         width: 600px;
+    }
+    div.el-tabs__nav-wrap.is-top {
+        top: 50px;
     }
     div.el-tabs__active-bar.is-top{
         background-color: rgb(234,213,15);
@@ -370,5 +370,11 @@
     }
     div.el-tabs__item.is-top.is-active {
         color: rgb(234,213,15);
+    }
+    div.el-form-item__error {
+        font-size: 16px;
+    }
+    div.el-tabs__content {
+        top: 100px;
     }
 </style>
