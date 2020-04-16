@@ -10,7 +10,9 @@
             </el-form-item>
         </el-form>
 
-        <el-button @click="getcode">获取验证码</el-button>
+        <el-button id="getCodeBtn" :type="getCodeBtnEnabled ? 'primary' : 'info'" :disabled="!getCodeBtnEnabled" @click="getcode">
+            {{ getCodeBtnEnabled ? '发送验证码' : '重新发送 (' + emailForm.count + 's)'}}
+        </el-button>
 
         <el-form :model="pswdForm" ref="pswdForm" :rules="pswfRules" label-position="right">
             <el-form-item prop="code" label="邮箱验证码" type="number">
@@ -31,6 +33,8 @@
 <script>
 import GenerateVerificationCode from '../../graphql/SignInOrUp/GenerateVerificationCode.graphql'
 import PasswordReset from '../../graphql/UserInfoPages/PasswordReset.graphql'
+
+const waitTime = 60;
 
 export default {
     data() {
@@ -61,7 +65,8 @@ export default {
         };
         return{
             emailForm: {
-                email: ''
+                email: '',
+                count: waitTime
             },
             pswdForm: {
                 code: '',
@@ -104,7 +109,20 @@ export default {
             }
         }
     },
+    computed: {
+        getCodeBtnEnabled() {
+            return this.emailForm.count == waitTime;
+        }
+    },
     methods: {
+        setTime() {
+            if (this.emailForm.count == 0) {
+                this.emailForm.count = waitTime;
+            } else {
+                this.emailForm.count--;
+                setTimeout(this.setTime, 1000);
+            }
+        },
         getcode() {
             this.$refs['emailForm'].validate((valid)=>{
                 if(!valid){
@@ -119,6 +137,7 @@ export default {
                     console.log(data);
                     if(data.data.generateVerificationCode.success){
                         alert('发送成功');
+                        this.setTime();
                     }
                 }).catch(error=>{
                     alert(error);
