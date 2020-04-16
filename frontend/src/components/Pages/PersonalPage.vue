@@ -1,10 +1,20 @@
 //个人中心界面
 <template>
-    <div>
-        <button @click="goBack">返回</button>
+    <div class="card">
+        <router-link :to="{ name: 'index'}">
+            <el-button>返回</el-button>
+        </router-link>
+
         <p>昵称：{{user.name}}</p>
         <p>邮箱：{{user.email}}</p>
-        <button @click="gotoInfoChange">修改个人信息</button>
+
+        <router-link :to="{ name: 'infochange' }">
+            <el-button>修改个人信息</el-button>
+        </router-link>
+
+        <router-link :to="{ name: 'index' }">
+            <el-button @click="logout">退出登录</el-button>
+        </router-link>
     </div>
 </template>
 
@@ -12,16 +22,20 @@
 export default {
     data() {
         return{
-            user: JSON.parse(localStorage.getItem('user'))
+            user: localStorage.getItem('user')? JSON.parse(localStorage.getItem('user')) : ''
         }
     },
     methods: {
-        gotoInfoChange() {
-            this.$router.push({path:'/infochange'});
-        },
-        goBack() {
-            this.$router.go(-1);
+        logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
         }
     }
 }
 </script>
+
+<style>
+    .card {
+        background: url('http://106.13.41.151:8087/Assign6.png') center center no-repeat;
+    }
+</style>

@@ -253,6 +253,7 @@ import gql from "graphql-tag";
                         } else {
                             // TODO: 待测试，设置 token + 界面跳转，邮件服务未知错误
                             localStorage.setItem('token', result.token);
+                            localStorage.setItem('refreshtoken', result.refreshToken);
                             const user = {
                                 name: result.user.username,
                                 email: result.user.email

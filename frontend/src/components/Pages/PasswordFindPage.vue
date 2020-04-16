@@ -1,6 +1,8 @@
 <template>
     <div>
-        <button @click="goBack">返回</button>
+        <router-link :to="{ name: 'login'}">
+            <el-button>返回</el-button>
+        </router-link>
 
         <el-form :model="emailForm" ref="emailForm" :rules="emailRules" label-position="right">
             <el-form-item prop="email" label="邮箱">
@@ -8,7 +10,7 @@
             </el-form-item>
         </el-form>
 
-        <button @click="getcode">获取验证码</button>
+        <el-button @click="getcode">获取验证码</el-button>
 
         <el-form :model="pswdForm" ref="pswdForm" :rules="pswfRules" label-position="right">
             <el-form-item prop="code" label="邮箱验证码" type="number">
@@ -22,12 +24,13 @@
             </el-form-item>
         </el-form>
 
-        <button @click="submit">确定</button>
+        <el-button @click="submit">确定</el-button>
     </div>
 </template>
 
 <script>
-import gql from 'graphql-tag';
+import GenerateVerificationCode from '../../graphql/SignInOrUp/GenerateVerificationCode.graphql'
+import PasswordReset from '../../graphql/UserInfoPages/PasswordReset.graphql'
 
 export default {
     data() {
@@ -108,18 +111,15 @@ export default {
                     return;
                 }
                 this.$apollo.mutate({
-                    mutation: gql`mutation($email: String!){
-                        generateVerificationCode(email: $email){
-                            success
-                            errors
-                        }
-                    }`,
+                    mutation: GenerateVerificationCode,
                     variables: {
                         email: this.emailForm.email,
                     },
                 }).then(data=>{
-                    var result = JSON.parse(JSON.stringify(data));
-                    console.log(result.data);
+                    console.log(data);
+                    if(data.data.generateVerificationCode.success){
+                        alert('发送成功');
+                    }
                 }).catch(error=>{
                     alert(error);
                 });
@@ -135,29 +135,24 @@ export default {
                         return;
                     }
                     this.$apollo.mutate({
-                        mutation: gql`mutation($code: Int!, $email: String!, $pswd: String!){
-                            passwordReset(code: $code, email: $email, password: $pswd){
-                                success
-                                errors
-                            }
-                        }`,
+                        mutation: PasswordReset,
                         variables: {
                             code: parseInt(this.pswdForm.code),
                             email: this.emailForm.email,
                             pswd: this.pswdForm.pswd1
                         },
                     }).then(data=>{
-                        var result = JSON.parse(JSON.stringify(data));
-                        console.log(result.data);
+                        console.log(data);
+                        if(data.data.passwordReset.success){
+                            alert('修改成功');
+                            this.$router.push({name: 'index'});
+                        }
                     }).catch(error=>{
                         alert(error);
                     });
                 });
             });
         },
-        goBack() {
-            this.$router.go(-1);
-        }
     }
 }
 </script>
