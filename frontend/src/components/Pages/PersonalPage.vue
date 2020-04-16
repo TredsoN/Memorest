@@ -1,4 +1,3 @@
-//个人中心界面
 <template>
     <div class="card">
         <router-link :to="{ name: 'index'}">

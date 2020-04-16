@@ -1,4 +1,3 @@
-import gql from "graphql-tag";
 <template>
     <div>
         <el-tabs v-model="activeTag">
