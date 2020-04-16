@@ -154,7 +154,7 @@ AUTHENTICATION_BACKENDS = [
 
 GRAPHQL_JWT = {
     "JWT_VERIFY_EXPIRATION": True,
-    'JWT_EXPIRATION_DELTA': timedelta(days=30),
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=3),
     'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=30),
 
     # optional
@@ -170,6 +170,8 @@ GRAPHQL_JWT = {
 
 GRAPHQL_AUTH = {
     'UPDATE_MUTATION_FIELDS': ['username', ],
+
+    'ALLOW_DELETE_ACCOUNT': True
 }
 
 
