@@ -7,7 +7,7 @@ import { ApolloLink } from 'apollo-link'
 
 const apiLink = new createHttpLink({
     uri: 'http://106.13.41.151/graphql/',
-})
+});
 
 ///请求头添加token
 const middlewareLink = new ApolloLink((operation, forward) => {
@@ -16,23 +16,23 @@ const middlewareLink = new ApolloLink((operation, forward) => {
         headers: {
             Authorization: token? "JWT " + token : null
         }
-    })
-    return forward(operation)
-})
+    });
+    return forward(operation);
+});
   
 ///普通Apollo连接
 const clientBase = new ApolloClient({
     link: apiLink,
     cache: new InMemoryCache()
-})
+});
   
 ///添加token的Apollo连接
 const clientWithHeader = new ApolloClient({
     link: middlewareLink.concat(apiLink),
     cache: new InMemoryCache()
-})
+});
   
-Vue.use(VueApollo)
+Vue.use(VueApollo);
   
 const apolloProvider = new VueApollo({
     clients: {
@@ -40,6 +40,6 @@ const apolloProvider = new VueApollo({
         base: clientBase
     },
     defaultClient: clientBase
-})
+});
 
 export default apolloProvider;

@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 export default {
     name:"Test",
     data() {
@@ -20,7 +19,7 @@ export default {
                 name: this.username,
                 email: "972075430@qq.com"
             }
-            Vue.prototype.$user = user;
+            localStorage.setItem('user', JSON.stringify(user));
             this.$router.push({path:'/personal'});
         }
     }

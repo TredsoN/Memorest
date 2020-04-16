@@ -9,11 +9,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
 export default {
     data() {
         return{
-            user: Vue.prototype.$user
+            user: JSON.parse(localStorage.getItem('user'))
         }
     },
     methods: {
