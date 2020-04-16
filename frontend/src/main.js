@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './utils/router.js'
 import apolloProvider from './utils/apolloClient.js'
 import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css';
 
 
 router.beforeEach((to, from, next) => {
