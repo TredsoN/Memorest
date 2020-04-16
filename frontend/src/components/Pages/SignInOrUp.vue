@@ -356,6 +356,9 @@
     div.el-tabs__nav-wrap.is-top {
         top: 50px;
     }
+    div.el-tabs__content {
+        overflow: visible;
+    }
     div.el-tabs__active-bar.is-top{
         background-color: rgb(234,213,15);
     }
