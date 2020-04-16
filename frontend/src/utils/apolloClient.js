@@ -11,7 +11,7 @@ const apiLink = new createHttpLink({
 
 ///请求头添加token
 const middlewareLink = new ApolloLink((operation, forward) => {
-    const token = Vue.prototype.$token
+    const token = localStorage.getItem('token');
     operation.setContext({
         headers: {
             Authorization: token? "JWT " + token : null
