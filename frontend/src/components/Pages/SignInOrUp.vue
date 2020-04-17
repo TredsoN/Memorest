@@ -19,14 +19,17 @@
                     </el-form-item>
                     <el-form-item prop="password" style="width:700px">
                         <i slot="label" class="form-label">PASSWORD</i>
-                        <el-input style="width:300px" type="password" v-model="signInForm.password" show-password></el-input>
+                        <el-input style="width:300px" type="password" v-model="signInForm.password"
+                                  show-password></el-input>
                         <router-link :to="{ name: 'passwordfind' }">
                             <el-button class="button-inputside" style="width:100px;font-size:16px">
                                 forget password?
                             </el-button>
                         </router-link>
                     </el-form-item>
-                    <el-button class="button-common" style="margin-top:20px;font-size: 24px;" type="primary" @click="login">START</el-button>
+                    <el-button class="button-common" style="margin-top:20px;font-size: 24px;" type="primary"
+                               @click="login">START
+                    </el-button>
                 </el-form>
             </el-tab-pane>
             <el-tab-pane label="SIGN UP" name="signUp">
@@ -34,17 +37,17 @@
                          ref="signUpForm"
                          :rules="signUpRules"
                          label-width="300px"
-                         label-position="left" 
+                         label-position="left"
                          hide-required-asterisk=true>
                     <el-form-item prop="email" style="width:700px">
                         <i slot="label" class="form-label">EMAIL</i>
                         <el-input style="width:300px" v-model="signUpForm.email"></el-input>
                         <el-button id="getCodeBtn"
-                                class="button-inputside"
-                                style="width:100px;font-size:16px"
-                                :type="getCodeBtnEnabled ? 'primary' : 'info'"
-                                :disabled="!getCodeBtnEnabled"
-                                @click="getCode">
+                                   class="button-inputside"
+                                   style="width:100px;font-size:16px"
+                                   :type="getCodeBtnEnabled ? 'primary' : 'info'"
+                                   :disabled="!getCodeBtnEnabled"
+                                   @click="getCode">
                             {{ getCodeBtnEnabled ? 'get code' : 'retry (' + signUpForm.count + 's)'}}
                         </el-button>
                     </el-form-item>
@@ -64,7 +67,9 @@
                         <i slot="label" class="form-label">PASSWORD CFM</i>
                         <el-input type="password" v-model="signUpForm.checkPassword" show-password></el-input>
                     </el-form-item>
-                    <el-button class="button-common" style="margin-top:20px;font-size:24px" type="primary" @click="register">START</el-button>
+                    <el-button class="button-common" style="margin-top:20px;font-size:24px" type="primary"
+                               @click="register">START
+                    </el-button>
                 </el-form>
             </el-tab-pane>
         </el-tabs>
@@ -76,6 +81,8 @@
     import LoginByEmail from '../../graphql/SignInOrUp/LoginByEmail.graphql'
     import GenerateVerificationCode from '../../graphql/SignInOrUp/GenerateVerificationCode.graphql'
     import Register from '../../graphql/SignInOrUp/Register.graphql'
+    import validator from '../../validator'
+    import error from '../../error'
 
 
     const waitTime = 60;
@@ -84,34 +91,19 @@
     const signInOrUp = {
         name: 'SignInOrUp',
         data() {
-            const validateUsernameOrEmail = (rule, value, callback) => {
-                const regUsername = /^[^@]{1,16}$/;
-                const regEmail = /^[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?$/;
-                if (!regUsername.test(value) && !regEmail.test(value)) {
-                    callback(new Error());
-                }
-                callback();
-            };
-            const validateUsername = (rule, value, callback) => {
-                const reg = /^[^@]{1,16}$/;
-                if (!reg.test(value)) {
-                    callback(new Error());
-                }
-                callback();
-            };
-            const validatePassword = (rule, value, callback) => {
-                const reg = /^([a-z_A-Z0-9-.!@#$%\\^&*)(+={}\][/",'<>~·`?:;|]){8,32}$/;
+            const validateSignUpPassword = (rule, value, callback) => {
+                const reg = validator.regPassword;
                 if (!reg.test(value)) {
                     callback(new Error());
                 }
                 if (this.signUpForm.checkPassword !== '') {
-                    this.$refs.signUpForm.validateField('checkPassword');
+                    this.$refs.signUpForm.validateField();
                 }
                 callback();
             };
-            const validateCheckPassword = (rule, value, callback) => {
+            const validateSignUpCheckPassword = (rule, value, callback) => {
                 if (value !== this.signUpForm.password) {
-                    callback(new Error('error checkPassword'));
+                    callback(new Error());
                 }
                 callback();
             };
@@ -133,20 +125,25 @@
                     usernameOrEmail: [
                         {
                             required: true,
-                            message: '请输入用户名或邮箱',
+                            message: error.emptyUsernameOrEmail,
                             trigger: 'blur'
                         },
                         {
-                            validator: validateUsernameOrEmail,
-                            message: '请输入正确的用户名或邮箱',
+                            validator: validator.usernameOrEmail,
+                            message: error.incorrectUsernameOrEmail,
                             trigger: ['blur', 'change']
                         }
                     ],
                     password: [
                         {
                             required: true,
-                            message: '请输入密码',
+                            message: error.emptyPassword,
                             trigger: 'blur'
+                        },
+                        {
+                            validator: validator.password,
+                            message: error.incorrectPassword,
+                            trigger: ['blur', 'change']
                         }
                     ]
                 },
@@ -154,56 +151,61 @@
                     email: [
                         {
                             required: true,
-                            message: 'sdasadadsdas',
+                            message: error.emptyEmail,
                             trigger: 'blur'
                         },
                         {
                             type: 'email',
-                            message: '请输入正确的邮箱地址',
+                            message: error.incorrectEmail,
                             trigger: ['blur', 'change']
                         }
                     ],
                     username: [
                         {
                             required: true,
-                            message: '请输入用户名',
+                            message: error.emptyUsername,
                             trigger: 'blur'
                         },
                         {
-                            validator: validateUsername,
-                            message: '最多 16 个字符',
+                            validator: validator.username,
+                            message: error.incorrectUsername,
                             trigger: ['blur', 'change']
                         }
                     ],
                     password: [
                         {
                             required: true,
-                            message: '请输入密码',
+                            message: error.emptyPassword,
                             trigger: 'blur'
                         },
                         {
-                            validator: validatePassword,
-                            message: '字母 / 数字 / 英文标点，长度 8-32',
+                            validator: validateSignUpPassword,
+                            message: error.incorrectPassword,
                             trigger: ['blur', 'change']
                         }
                     ],
                     checkPassword: [
                         {
                             required: true,
-                            message: '请再次输入密码',
+                            message: error.emptyCheckPassword,
                             trigger: 'blur'
                         },
                         {
-                            validator: validateCheckPassword,
-                            message: '两次输入的密码不一致',
+                            validator: validateSignUpCheckPassword,
+                            message: error.incorrectCheckPassword,
                             trigger: ['blur', 'change']
                         }
                     ],
                     code: [
                         {
                             required: true,
-                            message: '请输入验证码',
+                            message: error.emptyCode,
                             trigger: 'blur'
+                        },
+                        {
+                            validator: validator.code,
+                            message: error.incorrectCode,
+                            trigger: ['blur', 'change']
                         }
                     ]
                 }
@@ -288,7 +290,7 @@
                     if (!valid) {
                         return;
                     }
-                    const regUsername = /^[^@]{1,16}$/;
+                    const regUsername = validator.regUsername;
                     const isUsername = regUsername.test(this.signInForm.usernameOrEmail);
                     this.$apollo.mutate({
                         mutation: isUsername ? LoginByUsername : LoginByEmail,
@@ -336,27 +338,34 @@
         margin: 0 auto;
         width: 600px;
     }
+
     div.el-tabs__nav-wrap.is-top {
         top: 50px;
     }
+
     div.el-tabs__content {
         overflow: visible;
     }
-    div.el-tabs__active-bar.is-top{
-        background-color: rgb(234,213,15);
+
+    div.el-tabs__active-bar.is-top {
+        background-color: rgb(234, 213, 15);
     }
+
     div.el-tabs__item.is-top {
         width: 300px;
         height: 50px;
         font-size: 32px;
-        color: rgb(154,132,22);
+        color: rgb(154, 132, 22);
     }
+
     div.el-tabs__item.is-top:hover {
-        color: rgb(234,213,15);
+        color: rgb(234, 213, 15);
     }
+
     div.el-tabs__item.is-top.is-active {
-        color: rgb(234,213,15);
+        color: rgb(234, 213, 15);
     }
+
     div.el-tabs__content {
         top: 100px;
     }

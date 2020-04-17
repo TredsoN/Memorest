@@ -63,35 +63,30 @@
 <script>
 import GenerateVerificationCode from '../../graphql/SignInOrUp/GenerateVerificationCode.graphql'
 import PasswordReset from '../../graphql/UserInfoPages/PasswordReset.graphql'
+import validator from '../../validator'
+import error from '../../error'
+
 
 const waitTime = 60;
 
+
 export default {
     data() {
-        var code = (rule, value, callback)=>{
-            if(!value){
-                return callback(new Error('请输入验证码'));
-            }
-            if(value.length!=4){
-                return callback(new Error('验证码为4位'));
-            }
-            return callback();
-        }
-        var newpswd1 = (rule, value, callback) =>{
-            if(!value){
-                return callback(new Error('新密码不能为空'));
-            }
-            const reg = /^([a-z_A-Z0-9-.!@#$%\\^&*)(+={}\][/",'<>~·`?:;|]){8,32}$/;
+        const validatePassword = (rule, value, callback) => {
+            const reg = validator.regPassword;
             if (!reg.test(value)) {
-                return callback(new Error('密码格式错误（字母/数字/英文标点，长度为8-32）'));
+                callback(new Error());
             }
-            return callback();
+            if (this.pswdForm.pswd2 !== '') {
+                this.$refs.signUpForm.validateField();
+            }
+            callback();
         };
-        var newpswd2 = (rule, value, callback) =>{
-            if(value !== this.pswdForm.pswd1){
-                return callback(new Error('两次输入密码不一致'));
+        const validateCheckPassword = (rule, value, callback) => {
+            if (value !== this.pswdForm.pswd1) {
+                callback(new Error());
             }
-            return callback();
+            callback();
         };
         return{
             emailForm: {
@@ -107,33 +102,51 @@ export default {
                 email: [
                     {
                         required: true,
-                        message: '邮箱不能为空',
+                        message: error.emptyEmail,
                         trigger: 'blur'
                     },
                     {
                         type: 'email',
-                        message: '邮箱格式错误',
-                        trigger: 'blur'
+                        message: error.incorrectEmail,
+                        trigger: ['blur', 'change']
                     }
                 ]
             },
             pswfRules: {
                 code: [
                     {
-                        validator: code,
+                        required: true,
+                        message: error.emptyCode,
                         trigger: 'blur'
+                    },
+                    {
+                        validator: validator.code,
+                        message: error.incorrectCode,
+                        trigger: ['blur', 'change']
                     }
                 ],
                 pswd1: [
                     {
-                        validator: newpswd1,
+                        required: true,
+                        message: error.emptyPassword,
                         trigger: 'blur'
+                    },
+                    {
+                        validator: validatePassword,
+                        message: error.incorrectPassword,
+                        trigger: ['blur', 'change']
                     }
                 ],
                 pswd2: [
                     {
-                        validator: newpswd2,
+                        required: true,
+                        message: error.emptyCheckPassword,
                         trigger: 'blur'
+                    },
+                    {
+                        validator: validateCheckPassword,
+                        message: error.incorrectCheckPassword,
+                        trigger: ['blur', 'change']
                     }
                 ]
             }

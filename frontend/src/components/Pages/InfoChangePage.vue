@@ -39,19 +39,13 @@
 <script>
 import RefershToken from '../../graphql/RefreshToken.graphql'
 import UpdateUsername from '../../graphql/UserInfoPages/InfoChange.graphql'
+import validator from '../../validator'
+import error from '../../error'
+
 
 export default {
     inject: ['reload'],
     data() {
-        var name = (rule, value, callback) =>{
-            if(!value){
-                return callback(new Error('用户名不能为空'));
-            }
-            if(value.length > 16){
-                return callback(new Error('用户名不能超过16个字符'));
-            }
-            return callback();
-        };
         return {
             name: JSON.parse(localStorage.getItem('user'))['name'],
             changeForm: {
@@ -60,8 +54,14 @@ export default {
             changeRules: {
                 username: [
                     {
-                        validator: name,
+                        required: true,
+                        message: error.emptyUsername,
                         trigger: 'blur'
+                    },
+                    {
+                        validator: validator.username,
+                        message: error.incorrectUsername,
+                        trigger: ['blur', 'change']
                     }
                 ]
             }

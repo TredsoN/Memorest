@@ -42,34 +42,27 @@
 <script>
 import RefershToken from '../../graphql/RefreshToken.graphql'
 import UpdatePassword from '../../graphql/UserInfoPages/PasswordChange.graphql'
+import validator from '../../validator'
+import error from '../../error'
+
 
 export default {
     data() {
-        var oldpswd = (rule, value, callback) =>{
-            if(!value){
-                return callback(new Error('旧密码不能为空'));
-            }
-            const reg = /^([a-z_A-Z0-9-.!@#$%\\^&*)(+={}\][/",'<>~·`?:;|]){8,32}$/;
+        const validatePassword = (rule, value, callback) => {
+            const reg = validator.regPassword;
             if (!reg.test(value)) {
-                return callback(new Error('密码格式错误（字母/数字/英文标点，长度为8-32）'));
+                callback(new Error());
             }
-            return callback();
+            if (this.changePsForm.newpswd2 !== '') {
+                this.$refs.signUpForm.validateField();
+            }
+            callback();
         };
-        var newpswd1 = (rule, value, callback) =>{
-            if(!value){
-                return callback(new Error('新密码不能为空'));
+        const validateCheckPassword = (rule, value, callback) => {
+            if (value !== this.changePsForm.newpswd1) {
+                callback(new Error());
             }
-            const reg = /^([a-z_A-Z0-9-.!@#$%\\^&*)(+={}\][/",'<>~·`?:;|]){8,32}$/;
-            if (!reg.test(value)) {
-                return callback(new Error('密码格式错误（字母/数字/英文标点，长度为8-32）'));
-            }
-            return callback();
-        };
-        var newpswd2 = (rule, value, callback) =>{
-            if(value !== this.changePsForm.newpswd1){
-                return callback(new Error('两次输入密码不一致'));
-            }
-            return callback();
+            callback();
         };
         return{
             changePsForm: {
@@ -80,20 +73,38 @@ export default {
             changePsRules:{
                 oldpswd:[
                     {
-                        validator: oldpswd,
+                        required: true,
+                        message: error.emptyOldPassword,
                         trigger: 'blur'
+                    },
+                    {
+                        validator: validator.password,
+                        message: error.incorrectPassword,
+                        trigger: ['blur', 'change']
                     }
                 ],
                 newpswd1:[
                     {
-                        validator: newpswd1,
+                        required: true,
+                        message: error.emptyNewPassword,
                         trigger: 'blur'
+                    },
+                    {
+                        validator: validatePassword,
+                        message: error.incorrectPassword,
+                        trigger: ['blur', 'change']
                     }
                 ],
                 newpswd2:[
                     {
-                        validator: newpswd2,
+                        required: true,
+                        message: error.emptyCheckNewPassword,
                         trigger: 'blur'
+                    },
+                    {
+                        validator: validateCheckPassword,
+                        message: error.incorrectCheckNewPassword,
+                        trigger: ['blur', 'change']
                     }
                 ],
             }
