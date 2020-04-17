@@ -1,32 +1,62 @@
 <template>
-    <div>
-        <router-link :to="{ name: 'login'}">
-            <el-button>返回</el-button>
+    <div class="background2">
+        <router-link :to="{ name: 'login' }">
+            <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
+                BACK
+            </el-button>
         </router-link>
 
-        <el-form :model="emailForm" ref="emailForm" :rules="emailRules" label-position="right">
-            <el-form-item prop="email" label="邮箱">
-                <el-input v-model="emailForm.email"></el-input>
-            </el-form-item>
-        </el-form>
+         <div class="page-panel">
+            <div style="height:50px">
+                <label class="title">RESET INFO</label>
+            </div>
+            <hr class="title"/>
+            <div style="margin-top:50px">
+                <el-form :model="emailForm" 
+                        ref="emailForm" 
+                        :rules="emailRules" 
+                        label-position="left" 
+                        label-width="300px"
+                        hide-required-asterisk=true>
+                    <el-form-item prop="email" style="width:800px">
+                        <i slot="label" class="form-label" style="font-size:24px">EMAIL</i>
+                        <el-input style="width:300px" v-model="emailForm.email"></el-input>
+                        <el-button id="getCodeBtn"
+                                class="button-inputside"
+                                style="width:100px;font-size:16px"
+                                :type="getCodeBtnEnabled ? 'primary' : 'info'"
+                                :disabled="!getCodeBtnEnabled"
+                                @click="getcode">
+                            {{ getCodeBtnEnabled ? 'get code' : 'retry (' + emailForm.count + 's)'}}
+                        </el-button>
+                    </el-form-item>
+                </el-form>
 
-        <el-button id="getCodeBtn" :type="getCodeBtnEnabled ? 'primary' : 'info'" :disabled="!getCodeBtnEnabled" @click="getcode">
-            {{ getCodeBtnEnabled ? '发送验证码' : '重新发送 (' + emailForm.count + 's)'}}
-        </el-button>
+                <el-form :model="pswdForm" 
+                        ref="pswdForm" 
+                        :rules="pswfRules" 
+                        label-position="left" 
+                        label-width="300px"
+                        hide-required-asterisk=true>
+                    <el-form-item prop="code">
+                        <i slot="label" class="form-label" style="font-size:24px">CODE</i>
+                        <el-input style="width:300px" v-model="pswdForm.code"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="pswd1">
+                        <i slot="label" class="form-label" type="password" style="font-size:24px" show-password>NEW PASSWORD</i>
+                        <el-input style="width:300px" v-model="pswdForm.pswd1"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="pswd2">
+                        <i slot="label" class="form-label" type="password" style="font-size:24px" show-password>PASSWORD CFM</i>
+                        <el-input style="width:300px" v-model="pswdForm.pswd2"></el-input>
+                    </el-form-item>
+                </el-form>
 
-        <el-form :model="pswdForm" ref="pswdForm" :rules="pswfRules" label-position="right">
-            <el-form-item prop="code" label="邮箱验证码" type="number">
-                <el-input v-model="pswdForm.code"></el-input>
-            </el-form-item>
-            <el-form-item prop="pswd1" label="新密码">
-                <el-input v-model="pswdForm.pswd1"></el-input>
-            </el-form-item>
-            <el-form-item prop="pswd2" label="确认新密码">
-                <el-input v-model="pswdForm.pswd2"></el-input>
-            </el-form-item>
-        </el-form>
-
-        <el-button @click="submit">确定</el-button>
+                <div style="margin-top:50px;height:40px;text-align:center">
+                    <el-button class="button-common" style="font-size:24px" @click="submit">RESET</el-button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -139,6 +169,10 @@ export default {
                         alert('发送成功');
                         this.setTime();
                     }
+                    else{
+                        alert('发送失败');
+                        console.log(data.data.generateVerificationCode);
+                    }
                 }).catch(error=>{
                     alert(error);
                 });
@@ -165,6 +199,9 @@ export default {
                         if(data.data.passwordReset.success){
                             alert('修改成功');
                             this.$router.push({name: 'index'});
+                        }
+                        else{
+                            alert(data.data.passwordReset.errors.code);
                         }
                     }).catch(error=>{
                         alert(error);
