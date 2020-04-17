@@ -46,6 +46,12 @@ class VerificationCode(models.Model):
         code = random.randint(1000, 9999)
         item.code = code
 
+        message = """
+        尊敬的用户您好！\n\n
+        您的验证码为：{0}\n\n\n\n
+        注意：此操作可能会修改您的密码。如非本人操作，请及时登录并修改密码以保证帐户安全 \n
+        """
+
         try:
             send_mail(
                 subject="Memorest 验证码",

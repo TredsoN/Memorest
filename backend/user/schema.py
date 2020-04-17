@@ -70,13 +70,13 @@ class Register(Output, graphene.Mutation):
 
     def mutate(self, info, email, username, password, code):
         with transaction.atomic():
+            verification_code = VerificationCode.objects.filter(email=email).first()
+            if verification_code is None or verification_code.code != code:
+                return Register(success=False, errors={"code": "验证码错误"})
             if User.objects.filter(email=email).exists():
                 return Register(success=False, errors={"email": "当前邮箱已经被使用"})
             if User.objects.filter(username=username).exists():
                 return Register(success=False, errors={"username": "当前用户名已被使用"})
-            verification_code = VerificationCode.objects.filter(email=email).first()
-            if verification_code is None or verification_code.code != code:
-                return Register(success=False, errors={"code": "验证码错误"})
 
             user = User(username=username, email=email)
             user.set_password(password)
@@ -122,7 +122,7 @@ class UpdateUsername(Output, graphene.Mutation):
     返回值: \n
     success: 操作是否成功 \n
     errors: 如果操作失败，返回失败原因 \n
-    token: 新的JWT token
+    token: 新的JWT token \n
     refreshToken: 新的refresh token
 
     描述: \n
