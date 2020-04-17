@@ -11,7 +11,7 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title
   }
   next();
-})
+});
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false;

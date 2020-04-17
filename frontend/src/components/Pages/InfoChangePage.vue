@@ -1,33 +1,51 @@
 <template>
-    <div>
-        <button @click="goBack">返回</button>
+    <div class="background2">
+        <router-link :to="{ name: 'personal' }">
+            <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
+                BACK
+            </el-button>
+        </router-link>
 
-        <el-form :model="changeForm" ref="changeForm" :rules="changeRules" label-position="right">
-            <el-form-item prop="username" label="用户名">
-                <el-input v-model="changeForm.username"></el-input>
-            </el-form-item>
-        </el-form>
-
-        <button @click="submit">确定</button>
-        <button @click="gotoPassChange">修改密码</button>
+        <div class="page-panel">
+            <div style="height:50px">
+                <label class="title">RESET INFO</label>
+            </div>
+            <hr class="title"/>
+            <div style="margin-top:50px">
+                <el-form :model="changeForm"
+                        ref="changeForm" 
+                        :rules="changeRules" 
+                        label-position="left" 
+                        label-width="300px"
+                        hide-required-asterisk=true>
+                    <el-form-item prop="username">
+                        <i slot="label" class="form-label" style="font-size:24px">NEW USERNAME</i>
+                        <el-input style="width:300px" v-model="changeForm.username" :placeholder="name"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div style="margin-top:50px;height:40px;text-align:center">
+                <el-button class="button-common" style="font-size:24px" @click="submit">RESET</el-button>
+            </div>
+            <div style="text-align:center;height:20px;">
+                <router-link :to="{ name: 'passwordchange' }">
+                    <el-button class="button-back" style="font-size:16px">reset password</el-button>
+                </router-link>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import gql from 'graphql-tag';
+import RefershToken from '../../graphql/RefreshToken.graphql'
+import UpdateUsername from '../../graphql/UserInfoPages/InfoChange.graphql'
+import validator from '../../validator'
+import error from '../../error'
+
 
 export default {
     inject: ['reload'],
     data() {
-        var name = (rule, value, callback) =>{
-            if(!value){
-                return callback(new Error('用户名不能为空'));
-            }
-            if(value.length > 16){
-                return callback(new Error('用户名不能超过16个字符'));
-            }
-            return callback();
-        };
         return {
             name: JSON.parse(localStorage.getItem('user'))['name'],
             changeForm: {
@@ -36,43 +54,69 @@ export default {
             changeRules: {
                 username: [
                     {
-                        validator: name,
+                        required: true,
+                        message: error.emptyUsername,
                         trigger: 'blur'
+                    },
+                    {
+                        validator: validator.username,
+                        message: error.incorrectUsername,
+                        trigger: ['blur', 'change']
                     }
                 ]
             }
         }
     },
     methods:{
+        refreshtoken() {
+            this.$apollo.mutate({
+                mutation: RefershToken,
+                variables: {
+                    rtoken: localStorage.getItem('refreshtoken')
+                },
+            }).then(data=>{
+                console.log(data);
+                if(data.data.refreshToken.success){
+                    localStorage.setItem('token', data.data.refreshToken.token);
+                    localStorage.setItem('refreshtoken', data.data.refreshToken.refreshToken);
+                }
+            }).catch(error=>{
+                console.log(error);
+            });
+        },
+        updateusername() {
+            this.$apollo.mutate({
+                mutation: UpdateUsername,
+                variables: {
+                    username: this.changeForm.username
+                },
+                client: 'withtoken'
+            }).then(data=>{
+                console.log(data);
+                if(data.data.updateUsername.success){
+                    alert('修改成功');
+                    var newuser = JSON.parse(localStorage.getItem('user'));
+                    newuser.name = this.changeForm.username;
+                    localStorage.setItem('user', JSON.stringify(newuser));
+                    localStorage.setItem('token', data.data.updateUsername.token);
+                    localStorage.setItem('refreshtoken', data.data.updateUsername.refreshToken);
+                    this.$router.push({name: 'personal'});
+                }
+                else{
+                    alert(data.data.updateUsername.errors.code);
+                }
+            }).catch(error=>{
+                console.log(error);
+            });
+        },
         submit() {
             this.$refs['changeForm'].validate((valid)=>{
                 if(!valid){
                     return;
                 }
-                this.$apollo.mutate({
-                    mutation: gql`mutation($username: String!){
-                        updateUsername(username: $username){
-                            success
-                            errors
-                        }
-                    }`,
-                    variables: {
-                        username: this.changeForm.username
-                    },
-                    client: 'withtoken'
-                }).then(data=>{
-                    var result = JSON.parse(JSON.stringify(data));
-                    console.log(result.data);
-                }).catch(error=>{
-                    alert(error);
-                });
+                this.refreshtoken();
+                this.updateusername();
             });
-        },
-        gotoPassChange() {
-            this.$router.push({path:'/passwordchange'});
-        },
-        goBack() {
-            this.$router.go(-1);
         }
     }
 }

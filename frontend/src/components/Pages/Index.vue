@@ -3,9 +3,10 @@
         目前啥都没有的主界面
         <br/>
         <router-link :to="{ name: 'login' }">
-            <el-button v-if="!isLogined">登录</el-button>
+            <button class="button" v-if="!isLogined">登录</button>
         </router-link>
-        <router-link :to="{ name: 'infochange' }">
+        
+        <router-link :to="{ name: 'personal' }">
             <el-button v-if="isLogined">个人中心</el-button>
         </router-link>
     </div>
@@ -22,6 +23,6 @@
     }
 </script>
 
-<style scoped>
+<style>
 
 </style>
