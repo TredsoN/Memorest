@@ -214,6 +214,11 @@
         computed: {
             getCodeBtnEnabled() {
                 return this.signUpForm.count === waitTime;
+            },
+            isUsername() {
+                // true 表示用户名登录，false 表示邮箱登录
+                const regUsername = validator.regUsername;
+                return regUsername.test(this.signInForm.usernameOrEmail);
             }
         },
         methods: {
@@ -240,14 +245,12 @@
                         let result = data.data.generateVerificationCode;
                         console.log(result);
                         if (!result.success) {
-                            if (result.errors.code === '验证码错误') {
-                                alert(result.errors.code);
-                            }
+                            alert(JSON.stringify(result.errors));
                         } else {
                             this.setTime();
                         }
                     }).catch(error => {
-                        alert(error);
+                        alert(JSON.stringify(error));
                     });
                 });
             },
@@ -266,11 +269,64 @@
                         }
                     }).then(data => {
                         let result = data.data.register;
+                        console.log('success');
                         console.log(result);
                         if (!result.success) {
-                            alert(result.errors.code);
+                            if (result.errors.code === error.rIncorrectCode) {
+                                alert(error.mIncorrectCode);
+                            } else if (result.errors.username === error.rUsernameExist) {
+                                alert(error.mUsernameExist);
+                            } else if (result.errors.email === error.rEmailExist) {
+                                alert(error.mEmailExist);
+                            } else {
+                                alert(JSON.stringify(result.errors));
+                            }
                         } else {
-                            // TODO: 待测试，设置 token + 界面跳转，邮件服务未知错误
+                            localStorage.setItem('token', result.token);
+                            localStorage.setItem('refreshToken', result.refreshToken);
+                            const user = {
+                                name: this.signUpForm.username,
+                                email: this.signUpForm.email
+                            };
+                            localStorage.setItem('user', JSON.stringify(user));
+                            this.$router.push({
+                                name: 'index'
+                            });
+                        }
+                    }).catch(error => {
+                        console.log('error');
+                        alert(JSON.stringify(error));
+                    });
+                });
+            },
+            login() {
+                this.$refs.signInForm.validate((valid) => {
+                    if (!valid) {
+                        return;
+                    }
+                    this.$apollo.mutate({
+                        mutation: this.isUsername ? LoginByUsername : LoginByEmail,
+                        variables: this.isUsername ? {
+                            username: this.signInForm.usernameOrEmail,
+                            password: this.signInForm.password
+                        } : {
+                            email: this.signInForm.usernameOrEmail,
+                            password: this.signInForm.password
+                        }
+                    }).then(data => {
+                        let result = data.data.login;
+                        console.log(result);
+                        if (!result.success) {
+                            if (result.errors.nonFieldErrors[0].code === 'invalid_credentials') {
+                                if (this.isUsername) {
+                                    alert(error.mIncorrectUsernameOrPassword);
+                                } else {
+                                    alert(error.mIncorrectEmailOrPassword)
+                                }
+                            } else {
+                                alert(JSON.stringify(result.errors));
+                            }
+                        } else {
                             localStorage.setItem('token', result.token);
                             localStorage.setItem('refreshToken', result.refreshToken);
                             const user = {
@@ -283,48 +339,7 @@
                             });
                         }
                     }).catch(error => {
-                        alert(error);
-                    });
-                });
-            },
-            login() {
-                this.$refs.signInForm.validate((valid) => {
-                    if (!valid) {
-                        return;
-                    }
-                    const regUsername = validator.regUsername;
-                    const isUsername = regUsername.test(this.signInForm.usernameOrEmail);
-                    this.$apollo.mutate({
-                        mutation: isUsername ? LoginByUsername : LoginByEmail,
-                        variables: isUsername ? {
-                            username: this.signInForm.usernameOrEmail,
-                            password: this.signInForm.password
-                        } : {
-                            email: this.signInForm.usernameOrEmail,
-                            password: this.signInForm.password
-                        }
-                    }).then(data => {
-                        let result = data.data.login;
-                        console.log(result);
-                        if (!result.success) {
-                            if (result.errors.nonFieldErrors[0].code === 'invalid_credentials') {
-                                alert('用户名或密码不正确');
-                            } else {
-                                alert(JSON.stringify(result.errors));
-                            }
-                        } else {
-                            localStorage.setItem('token', result.token);
-                            const user = {
-                                name: result.user.username,
-                                email: result.user.email
-                            };
-                            localStorage.setItem('user', JSON.stringify(user));
-                            this.$router.push({
-                                name: 'index'
-                            });
-                        }
-                    }).catch(error => {
-                        alert(error);
+                        alert(JSON.stringify(error));
                     });
                 });
             }

@@ -32,7 +32,20 @@ const error = {
     emptyCode: 'Please input your code',
     incorrectCode: 'Verification code is 4 digits',
 
-    /** 后端请求响应错误 **/
+    /** 后端请求响应错误（后端返回的错误以 r 开头，前端显示的错误以 m 开头） **/
+
+    /* 注册 */
+    rIncorrectCode: '验证码错误',
+    mIncorrectCode: 'Your verification code is incorrect!',
+    rUsernameExist: '当前用户名已被使用',
+    mUsernameExist: 'This username has already been used!',
+    rEmailExist: '当前邮箱已经被使用',
+    mEmailExist: 'This mailbox has already been used!',
+
+    /* 登录 */
+    rInvalidCredentials: 'invalid_credentials',
+    mIncorrectUsernameOrPassword: 'Your username or password is incorrect!',
+    mIncorrectEmailOrPassword: 'Your email or password is incorrect!',
 
 };
 
