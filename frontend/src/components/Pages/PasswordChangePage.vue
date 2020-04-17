@@ -1,22 +1,41 @@
 <template>
-    <div>
-        <router-link :to="{ name: 'infochange'}">
-            <el-button>返回</el-button>
+    <div class="background2">
+        <router-link :to="{ name: 'infochange' }">
+            <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
+                BACK
+            </el-button>
         </router-link>
 
-        <el-form :model="changePsForm" ref="changePsForm" :rules="changePsRules" label-position="right">
-            <el-form-item prop="oldpswd" label="旧密码">
-                <el-input v-model="changePsForm.oldpswd" show-password></el-input>
-            </el-form-item>
-            <el-form-item prop="newpswd1" label="新密码">
-                <el-input v-model="changePsForm.newpswd1" show-password></el-input>
-            </el-form-item>
-            <el-form-item prop="newpswd2" label="再次输入新密码">
-                <el-input v-model="changePsForm.newpswd2" show-password></el-input>
-            </el-form-item>
-        </el-form>
-
-        <el-button @click="submit">确定</el-button>
+        <div class="page-panel">
+            <div style="height:50px">
+                <label class="title">RESET INFO</label>
+            </div>
+            <hr class="title"/>
+            <div style="margin-top:50px">
+                <el-form :model="changePsForm" 
+                        ref="changePsForm" 
+                        :rules="changePsRules" 
+                        label-position="left" 
+                        label-width="300px"
+                        hide-required-asterisk=true>
+                    <el-form-item prop="oldpswd">
+                        <i slot="label" class="form-label" type="password" style="font-size:24px" show-password>ORIGINAL PASSWORD</i>
+                        <el-input style="width:300px" v-model="changePsForm.oldpswd" show-password></el-input>
+                    </el-form-item>
+                    <el-form-item prop="newpswd1">
+                        <i slot="label" class="form-label" type="password" style="font-size:24px" show-password>NEW PASSWORD</i>
+                        <el-input style="width:300px" v-model="changePsForm.newpswd1" show-password></el-input>
+                    </el-form-item>
+                    <el-form-item prop="newpswd2">
+                        <i slot="label" class="form-label" type="password" style="font-size:24px" show-password>PASSWORD CFM</i>
+                        <el-input style="width:300px" v-model="changePsForm.newpswd2" show-password></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div style="margin-top:50px;height:40px;text-align:center">
+                <el-button class="button-common" style="font-size:24px" @click="submit">RESET</el-button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -112,6 +131,9 @@ export default {
                     localStorage.setItem('token', data.data.passwordChange.token);
                     localStorage.setItem('refreshtoken', data.data.passwordChange.refreshToken);
                     this.$router.push({name: 'personal'});
+                }
+                else{
+                    alert(data.data.passwordChange.errors.code);
                 }
             }).catch(error=>{
                 alert(error);

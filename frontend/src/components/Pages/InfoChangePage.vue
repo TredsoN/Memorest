@@ -1,20 +1,38 @@
 <template>
-    <div>
-        <router-link :to="{ name: 'personal'}">
-            <el-button>返回</el-button>
+    <div class="background2">
+        <router-link :to="{ name: 'personal' }">
+            <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
+                BACK
+            </el-button>
         </router-link>
 
-        <el-form :model="changeForm" ref="changeForm" :rules="changeRules" label-position="right">
-            <el-form-item prop="username" label="用户名">
-                <el-input v-model="changeForm.username"></el-input>
-            </el-form-item>
-        </el-form>
-
-        <el-button @click="submit">确定</el-button>
-
-        <router-link :to="{ name: 'passwordchange' }">
-            <el-button>修改密码</el-button>
-        </router-link>
+        <div class="page-panel">
+            <div style="height:50px">
+                <label class="title">RESET INFO</label>
+            </div>
+            <hr class="title"/>
+            <div style="margin-top:50px">
+                <el-form :model="changeForm"
+                        ref="changeForm" 
+                        :rules="changeRules" 
+                        label-position="left" 
+                        label-width="300px"
+                        hide-required-asterisk=true>
+                    <el-form-item prop="username">
+                        <i slot="label" class="form-label" style="font-size:24px">NEW USERNAME</i>
+                        <el-input style="width:300px" v-model="changeForm.username" :placeholder="name"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div style="margin-top:50px;height:40px;text-align:center">
+                <el-button class="button-common" style="font-size:24px" @click="submit">RESET</el-button>
+            </div>
+            <div style="text-align:center;height:20px;">
+                <router-link :to="{ name: 'passwordchange' }">
+                    <el-button class="button-back" style="font-size:16px">reset password</el-button>
+                </router-link>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -83,6 +101,9 @@ export default {
                     localStorage.setItem('token', data.data.updateUsername.token);
                     localStorage.setItem('refreshtoken', data.data.updateUsername.refreshToken);
                     this.$router.push({name: 'personal'});
+                }
+                else{
+                    alert(data.data.updateUsername.errors.code);
                 }
             }).catch(error=>{
                 console.log(error);
