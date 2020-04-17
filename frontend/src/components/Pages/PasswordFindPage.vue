@@ -17,7 +17,7 @@
                         :rules="emailRules" 
                         label-position="left" 
                         label-width="300px"
-                        hide-required-asterisk=true>
+                        :hide-required-asterisk="true">
                     <el-form-item prop="email" style="width:800px">
                         <i slot="label" class="form-label" style="font-size:24px">EMAIL</i>
                         <el-input style="width:300px" v-model="emailForm.email"></el-input>
@@ -37,7 +37,7 @@
                         :rules="pswfRules" 
                         label-position="left" 
                         label-width="300px"
-                        hide-required-asterisk=true>
+                        :hide-required-asterisk="true">
                     <el-form-item prop="code">
                         <i slot="label" class="form-label" style="font-size:24px">CODE</i>
                         <el-input style="width:300px" v-model="pswdForm.code"></el-input>

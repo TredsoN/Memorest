@@ -1,6 +1,6 @@
 const error = {
 
-    /* 前端字符串检验错误 */
+    /** 前端字符串检验错误 **/
 
     /* 注册、修改个人信息 */
     emptyUsername: 'Please input your username',
@@ -31,6 +31,8 @@ const error = {
     /* 注册，找回密码 */
     emptyCode: 'Please input your code',
     incorrectCode: 'Verification code is 4 digits',
+
+    /** 后端请求响应错误 **/
 
 };
 

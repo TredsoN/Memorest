@@ -17,7 +17,7 @@
                         :rules="changeRules" 
                         label-position="left" 
                         label-width="300px"
-                        hide-required-asterisk=true>
+                        :hide-required-asterisk="true">
                     <el-form-item prop="username">
                         <i slot="label" class="form-label" style="font-size:24px">NEW USERNAME</i>
                         <el-input style="width:300px" v-model="changeForm.username" :placeholder="name"></el-input>
@@ -68,17 +68,17 @@ export default {
         }
     },
     methods:{
-        refreshtoken() {
+        refreshToken() {
             this.$apollo.mutate({
                 mutation: RefershToken,
                 variables: {
-                    rtoken: localStorage.getItem('refreshtoken')
+                    rtoken: localStorage.getItem('refreshToken')
                 },
             }).then(data=>{
                 console.log(data);
                 if(data.data.refreshToken.success){
                     localStorage.setItem('token', data.data.refreshToken.token);
-                    localStorage.setItem('refreshtoken', data.data.refreshToken.refreshToken);
+                    localStorage.setItem('refreshToken', data.data.refreshToken.refreshToken);
                 }
             }).catch(error=>{
                 console.log(error);
@@ -99,7 +99,7 @@ export default {
                     newuser.name = this.changeForm.username;
                     localStorage.setItem('user', JSON.stringify(newuser));
                     localStorage.setItem('token', data.data.updateUsername.token);
-                    localStorage.setItem('refreshtoken', data.data.updateUsername.refreshToken);
+                    localStorage.setItem('refreshToken', data.data.updateUsername.refreshToken);
                     this.$router.push({name: 'personal'});
                 }
                 else{
@@ -114,7 +114,7 @@ export default {
                 if(!valid){
                     return;
                 }
-                this.refreshtoken();
+                this.refreshToken();
                 this.updateusername();
             });
         }

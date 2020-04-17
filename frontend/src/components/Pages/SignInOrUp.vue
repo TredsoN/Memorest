@@ -12,7 +12,7 @@
                          :rules="signInRules"
                          label-width="300px"
                          label-position="left"
-                         hide-required-asterisk=true>
+                         :hide-required-asterisk="true">
                     <el-form-item prop="usernameOrEmail">
                         <i slot="label" class="form-label">USERNAME/EMAIL</i>
                         <el-input v-model="signInForm.usernameOrEmail"></el-input>
@@ -38,7 +38,7 @@
                          :rules="signUpRules"
                          label-width="300px"
                          label-position="left"
-                         hide-required-asterisk=true>
+                         :hide-required-asterisk="true">
                     <el-form-item prop="email" style="width:700px">
                         <i slot="label" class="form-label">EMAIL</i>
                         <el-input style="width:300px" v-model="signUpForm.email"></el-input>
@@ -240,7 +240,9 @@
                         let result = data.data.generateVerificationCode;
                         console.log(result);
                         if (!result.success) {
-                            alert(result.errors.email);
+                            if (result.errors.code === '验证码错误') {
+                                alert(result.errors.code);
+                            }
                         } else {
                             this.setTime();
                         }
@@ -270,7 +272,7 @@
                         } else {
                             // TODO: 待测试，设置 token + 界面跳转，邮件服务未知错误
                             localStorage.setItem('token', result.token);
-                            localStorage.setItem('refreshtoken', result.refreshToken);
+                            localStorage.setItem('refreshToken', result.refreshToken);
                             const user = {
                                 name: result.user.username,
                                 email: result.user.email

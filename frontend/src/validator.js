@@ -1,5 +1,4 @@
 const validator = {
-    /* 字符串格式检测 */
 
     /* 正则表达式 */
     regUsername: /^[^@]{1,16}$/,

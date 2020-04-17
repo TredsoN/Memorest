@@ -17,7 +17,7 @@
                         :rules="changePsRules" 
                         label-position="left" 
                         label-width="300px"
-                        hide-required-asterisk=true>
+                        :hide-required-asterisk="true">
                     <el-form-item prop="oldpswd">
                         <i slot="label" class="form-label" type="password" style="font-size:24px" show-password>ORIGINAL PASSWORD</i>
                         <el-input style="width:300px" v-model="changePsForm.oldpswd" show-password></el-input>
@@ -111,17 +111,17 @@ export default {
         }
     },
     methods: {
-        refreshtoken() {
+        refreshToken() {
             this.$apollo.mutate({
                 mutation: RefershToken,
                 variables: {
-                    rtoken: localStorage.getItem('refreshtoken')
+                    rtoken: localStorage.getItem('refreshToken')
                 },
             }).then(data=>{
                 console.log(data);
                 if(data.data.refreshToken.success){
                     localStorage.setItem('token', data.data.refreshToken.token);
-                    localStorage.setItem('refreshtoken', data.data.refreshToken.refreshToken);
+                    localStorage.setItem('refreshToken', data.data.refreshToken.refreshToken);
                 }
             }).catch(error=>{
                 console.log(error);
@@ -140,7 +140,7 @@ export default {
                 if(data.data.passwordChange.success){
                     alert('修改成功');
                     localStorage.setItem('token', data.data.passwordChange.token);
-                    localStorage.setItem('refreshtoken', data.data.passwordChange.refreshToken);
+                    localStorage.setItem('refreshToken', data.data.passwordChange.refreshToken);
                     this.$router.push({name: 'personal'});
                 }
                 else{
@@ -155,7 +155,7 @@ export default {
                 if(!valid){
                     return;
                 }
-                this.refreshtoken();
+                this.refreshToken();
                 this.updatepassword();
             });
         }
