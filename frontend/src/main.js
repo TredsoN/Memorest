@@ -4,6 +4,7 @@ import router from './utils/router.js'
 import apolloProvider from './utils/apolloClient.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 
 router.beforeEach((to, from, next) => {
@@ -14,6 +15,7 @@ router.beforeEach((to, from, next) => {
 });
 
 Vue.use(ElementUI);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.config.productionTip = false;
 
 
