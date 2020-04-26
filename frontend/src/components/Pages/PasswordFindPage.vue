@@ -1,12 +1,14 @@
 <template>
-    <div class="background2">
+    <div>
+        <div class="background2" :style="{height:7*screenHeight>5*screenWidth?screenHeight+'px':5*screenWidth/7+'px',width:7*screenHeight>5*screenWidth?7*screenHeight/5+'px':screenWidth+'px'}"></div>
+
         <router-link :to="{ name: 'login' }">
             <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
                 BACK
             </el-button>
         </router-link>
 
-         <div class="page-panel">
+         <div class="page-panel" :style="{left: (screenWidth-700)/2+'px'}">
             <div style="height:50px">
                 <label class="title">RESET INFO</label>
             </div>
@@ -63,8 +65,8 @@
 <script>
 import GenerateVerificationCode from '../../graphql/SignInOrUp/GenerateVerificationCode.graphql'
 import PasswordReset from '../../graphql/UserInfoPages/PasswordReset.graphql'
-import validator from '../../validator'
-import error from '../../error'
+import validator from '../../utils/validator'
+import error from '../../utils/error'
 
 
 const waitTime = 60;
@@ -149,12 +151,24 @@ export default {
                         trigger: ['blur', 'change']
                     }
                 ]
-            }
+            },
+            screenHeight: document.documentElement.clientHeight,
+            screenWidth: document.documentElement.clientWidth
         }
     },
     computed: {
         getCodeBtnEnabled() {
             return this.emailForm.count == waitTime;
+        }
+    },
+    mounted() {
+        window.onresize = () => {
+            return (() => {
+                window.screenWidth = document.documentElement.clientWidth
+                window.screenHeight = document.documentElement.clientHeight
+                this.screenHeight = document.documentElement.clientHeight
+                this.screenWidth = window.screenWidth
+            })()
         }
     },
     methods: {

@@ -1,0 +1,5 @@
+mutation DeleteMemory($memoryId:Int) {
+    deleteMemory(memoryId:$memoryId){
+        success
+    }
+}

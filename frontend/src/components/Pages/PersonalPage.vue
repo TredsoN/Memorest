@@ -1,12 +1,14 @@
 <template>
-    <div class="background2">
+    <div>
+        <div class="background2" :style="{height:7*screenHeight>5*screenWidth?screenHeight+'px':5*screenWidth/7+'px',width:7*screenHeight>5*screenWidth?7*screenHeight/5+'px':screenWidth+'px'}"></div>
+
         <router-link :to="{ name: 'index' }">
             <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
                 BACK
             </el-button>
         </router-link>
 
-        <div class="page-panel">
+        <div class="page-panel" :style="{left: (screenWidth-700)/2+'px'}">
             <div style="height:50px">
                 <label class="title">MY</label>
             </div>
@@ -24,6 +26,11 @@
                 <div style="float:left"><label class="content-info">{{user.email}}</label></div>
             </div>
             <div style="margin-top:50px;text-align:center">
+                <router-link :to="{ name: 'mymemories' }">
+                    <el-button class="button-common" style="font-size: 24px">MY MEMORIES</el-button>
+                </router-link>
+            </div>
+            <div style="margin-top:10px;text-align:center">
                 <router-link :to="{ name: 'index' }">
                     <el-button class="button-common" style="font-size: 24px" @click="logout">LOG OUT</el-button>
                 </router-link>
@@ -36,7 +43,19 @@
 export default {
     data() {
         return{
+            screenHeight: document.documentElement.clientHeight,
+            screenWidth: document.documentElement.clientWidth,
             user: localStorage.getItem('user')? JSON.parse(localStorage.getItem('user')) : ''
+        }
+    },
+    mounted() {
+        window.onresize = () => {
+            return (() => {
+                window.screenWidth = document.documentElement.clientWidth
+                window.screenHeight = document.documentElement.clientHeight
+                this.screenHeight = document.documentElement.clientHeight
+                this.screenWidth = window.screenWidth
+            })()
         }
     },
     methods: {
@@ -50,9 +69,10 @@ export default {
 
 <style>
     div.page-panel {
-        margin: 0 auto;
-        margin-top: 50px;
+        position: absolute;
+        top: 50px;
         width: 700px;
         text-align:left;
+        z-index: 10;
     }
 </style>

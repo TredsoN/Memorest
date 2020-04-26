@@ -1,5 +1,7 @@
 <template>
-    <div class="background1">
+    <div>
+        <div class="background1" :style="{height:7*screenHeight>5*screenWidth?screenHeight+'px':5*screenWidth/7+'px',width:7*screenHeight>5*screenWidth?7*screenHeight/5+'px':screenWidth+'px'}"></div>
+
         <router-link :to="{ name: 'index' }">
             <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
                 BACK
@@ -81,8 +83,8 @@
     import LoginByEmail from '../../graphql/SignInOrUp/LoginByEmail.graphql'
     import GenerateVerificationCode from '../../graphql/SignInOrUp/GenerateVerificationCode.graphql'
     import Register from '../../graphql/SignInOrUp/Register.graphql'
-    import validator from '../../validator'
-    import error from '../../error'
+    import validator from '../../utils/validator'
+    import error from '../../utils/error'
 
 
     const waitTime = 60;
@@ -208,7 +210,9 @@
                             trigger: ['blur', 'change']
                         }
                     ]
-                }
+                },
+                screenHeight: document.documentElement.clientHeight,
+                screenWidth: document.documentElement.clientWidth
             };
         },
         computed: {
@@ -219,6 +223,16 @@
                 // true 表示用户名登录，false 表示邮箱登录
                 const regUsername = validator.regUsername;
                 return regUsername.test(this.signInForm.usernameOrEmail);
+            }
+        },
+        mounted() {
+            window.onresize = () => {
+                return (() => {
+                    window.screenWidth = document.documentElement.clientWidth
+                    window.screenHeight = document.documentElement.clientHeight
+                    this.screenHeight = document.documentElement.clientHeight
+                    this.screenWidth = window.screenWidth
+                })()
             }
         },
         methods: {

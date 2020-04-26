@@ -1,0 +1,5 @@
+mutation SetMemoryPrivacy($memoryId:Int,$privacy:Int) {
+    setMemoryDensity(memoryId:$memoryId,privacy:$privacy){
+        success
+    }
+}
