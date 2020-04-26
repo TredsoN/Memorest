@@ -15,6 +15,8 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from datetime import timedelta
 
+import djcelery
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -29,6 +31,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*', ]
 
+djcelery.setup_loader()  ###
+CELERY_TIMEZONE='Asia/Shanghai'  #并没有北京时区，与下面TIME_ZONE应该一致
+BROKER_URL='redis://localhost:6379'  #任何可用的redis都可以，不一定要在django server运行的主机上
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'  ###
+CELERYD_MAX_TASKS_PER_CHILD = 5
 
 # Application definition
 
@@ -48,6 +55,8 @@ INSTALLED_APPS = [
     'graphql_auth',  # GraphQL Auth
     'django_filters',
     'corsheaders',
+    'djcelery',
+    # 'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -186,3 +195,12 @@ DEFAULT_FROM_EMAIL = 'fforkboat@gmail.com'
 SITE_URL = '127.0.0.1:8000'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+# # 定时任务
+# CELERY_BEAT_SCHEDULE = {
+#     'add-every-30-seconds': {
+#         'task': 'memory.tasks.cycleprocessing',  # 任务名
+#         'schedule': timedelta(seconds=1),  # 每一秒执行一次该任务
+#         'args': ()  # 参数
+#     },
+# }
