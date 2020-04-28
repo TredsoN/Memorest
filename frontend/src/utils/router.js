@@ -6,6 +6,7 @@ import PasswordChange from '../components/Pages/PasswordChangePage.vue'
 import PasswordFind from '../components/Pages/PasswordFindPage.vue'
 import Index from '../components/Pages/Index'
 import Login from '../components/Pages/SignInOrUp'
+import CreateMemory from '../components/Pages/CreateMemory'
 
 
 Vue.use(Router);
@@ -28,6 +29,14 @@ const router = new Router({
             component: Login,
             meta: {
                 title: '登录'
+            }
+        },
+        {
+            path: '/create-memory',
+            name: 'createMemory',
+            component: CreateMemory,
+            meta: {
+                title: '发布记忆'
             }
         },
         {

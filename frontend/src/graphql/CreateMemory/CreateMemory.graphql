@@ -1,0 +1,5 @@
+mutation CreateMemory($memoryData: MemoryInput!){
+    createMemory(memoryData: $memoryData) {
+        success
+    }
+}

@@ -1,10 +1,8 @@
 <template>
     <div class="background1">
-        <router-link :to="{ name: 'index' }">
-            <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
-                BACK
-            </el-button>
-        </router-link>
+        <el-button class="button-back" @click="back" style="width: 100px; top: 5px; left: 0; position: absolute;">
+            BACK
+        </el-button>
         <el-tabs v-model="activeTag">
             <el-tab-pane label="SIGN IN" name="signIn">
                 <el-form :model="signInForm"
@@ -222,6 +220,9 @@
             }
         },
         methods: {
+            back() {
+                this.$router.go(-1);
+            },
             setTime() {
                 if (this.signUpForm.count === 0) {
                     this.signUpForm.count = waitTime;
@@ -289,9 +290,7 @@
                                 email: this.signUpForm.email
                             };
                             localStorage.setItem('user', JSON.stringify(user));
-                            this.$router.push({
-                                name: 'index'
-                            });
+                            this.$router.go(-1);
                         }
                     }).catch(error => {
                         console.log('error');
@@ -334,9 +333,7 @@
                                 email: result.user.email
                             };
                             localStorage.setItem('user', JSON.stringify(user));
-                            this.$router.push({
-                                name: 'index'
-                            });
+                            this.$router.go(-1);
                         }
                     }).catch(error => {
                         alert(JSON.stringify(error));

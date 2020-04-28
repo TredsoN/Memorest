@@ -90,7 +90,6 @@
                        color="dark-yellow"
                        :display-id="14"
                        style="bottom: 150px; right: -30px;" />
-
         <router-link v-if="!isLogined" :to="{ name: 'login' }">
             <el-button class="button-common button" style="font-size: 32px;">登录</el-button>
         </router-link>
@@ -101,7 +100,9 @@
             <font-awesome-icon icon="chevron-left" />
             <label class="goto-grave-label">Goto Grave</label>
         </div>
-        <font-awesome-icon class="create-memory" icon="plus-circle" />
+        <router-link :to="{ name: 'createMemory' }">
+            <font-awesome-icon class="create-memory" icon="plus-circle" />
+        </router-link>
     </div>
 </template>
 

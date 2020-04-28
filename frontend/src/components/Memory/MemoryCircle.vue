@@ -24,11 +24,14 @@
     export default {
         name: 'MemoryCircle',
         props: {
-            title: String,
+            title: {
+                type: String,
+                default: ''
+            },
             size: {
                 type: String,
                 validator: function (value) {
-                    return ['small', 'medium', 'large'].indexOf(value) !== -1
+                    return ['small', 'medium', 'large', 'x-large'].indexOf(value) !== -1
                 }
             },
             color: {
@@ -37,11 +40,16 @@
                     return ['light-yellow', 'dark-yellow', 'light-blue', 'dark-blue'].indexOf(value) !== -1
                 }
             },
-            displayId: Number
+            displayId: {
+                type: Number,
+                default: 0
+            }
         },
         computed: {
             exactSize() {
                 switch (this.size) {
+                    case 'x-large':
+                        return 650;
                     case 'large':
                         return 220;
                     case 'medium':
@@ -53,6 +61,8 @@
             },
             radius() {
                 switch (this.size) {
+                    case 'x-large':
+                        return this.exactSize / 2 - 50;
                     case 'large':
                         return this.exactSize / 2 - 25;
                     case 'medium':

@@ -32,6 +32,9 @@ const error = {
     emptyCode: 'Please input your code',
     incorrectCode: 'Verification code is 4 digits',
 
+    /* 创建记忆 */
+    loginBeforeCreateMemory: 'Please login before creating memory!',
+
     /** 后端请求响应错误（后端返回的错误以 r 开头，前端显示的错误以 m 开头） **/
 
     /* 注册 */
