@@ -1,6 +1,6 @@
-mutation GetRandomAliveMemory {
-    getRandomAliveMemory {
-        success,
+mutation GetMyMemory($name:String!) {
+    getAllMemory(creatorUsername:$name){
+        success
         memorys {
             id
             creatorUsername
@@ -9,6 +9,7 @@ mutation GetRandomAliveMemory {
             content
             createTime
             visitor
+            privacy
             activity
         }
     }

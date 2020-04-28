@@ -36,6 +36,19 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
     }
+    .div{
+        background: black;
+    }
+    div.index {
+        background: url('./assets/Images/index.jpg');
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        background-size: 100% 100%;
+        overflow: auto;
+    }
     div.background1 {
         background:url("./assets/Images/Image1.jpg");
         top: 0;
@@ -54,6 +67,14 @@
         height:100%;
         position:fixed;
         background-size:100% 100%;
+        overflow: auto;
+    }
+    div.background3 {
+        background: url('./assets/Images/Image3.jpg');
+        top: 0;
+        left: 0;
+        position: fixed;
+        background-size: 100% 100%;
         overflow: auto;
     }
     div.el-input {
@@ -147,6 +168,16 @@
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         font-size: 24px;
         color: rgb(234,182,15);
+    }
+    label.text-button {
+        line-height: 50px;
+        font-style: normal;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: 24px;
+        color: rgb(234,213,15);
+    }
+    label.text-button:hover {
+        cursor: pointer;
     }
     hr.title {
         top: 50px;

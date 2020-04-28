@@ -1,0 +1,5 @@
+mutation ReadMemory($memoryId:Int!, $isOwner: Boolean!) {
+    readOneMemory(memoryId:$memoryId, isOwner:$isOwner){
+        success
+    }
+}

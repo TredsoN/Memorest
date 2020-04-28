@@ -7,7 +7,8 @@ import PasswordFind from '../components/Pages/PasswordFindPage.vue'
 import Index from '../components/Pages/Index'
 import Login from '../components/Pages/SignInOrUp'
 import CreateMemory from '../components/Pages/CreateMemory'
-
+import MemoryInfo from '../components/Pages/MemoryInfoPage.vue'
+import MyMemories from '../components/Pages/MyMemoriesPage.vue'
 
 Vue.use(Router);
 
@@ -69,6 +70,22 @@ const router = new Router({
             component: PasswordFind,
             meta: {
                 title: '找回密码'
+            }
+        },
+        {
+            path: '/memoryinfo',
+            name: 'memoryinfo',
+            component: MemoryInfo,
+            meta: {
+                title: '记忆详情'
+            }
+        },
+        {
+            path: '/mymemories',
+            name: 'mymemories',
+            component: MyMemories,
+            meta: {
+                title: '我的记忆'
             }
         }
     ]

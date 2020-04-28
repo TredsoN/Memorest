@@ -1,0 +1,135 @@
+<template>
+    <div>
+        <div class="background3" :style="{height:7*screenHeight>5*screenWidth?screenHeight+'px':5*screenWidth/7+'px',width:7*screenHeight>5*screenWidth?7*screenHeight/5+'px':screenWidth+'px'}"></div>
+        
+        <router-link :to="{ name: 'personal' }">
+            <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
+                BACK
+            </el-button>
+        </router-link>
+
+        <div class="page-panel" :style="{left: (screenWidth-700)/2+'px'}">
+            <div style="height:50px">
+                <label class="title">MY MEMORIES</label>
+            </div>
+            <hr class="title"/>
+            <div @click="ReadMemory(item)" v-for="(item) in memories" :key="item.id" class="memorytile">
+                <div class="label-div">
+                    <label class="label-with-pointer" :style="{color:item.subject=='null'?'#ffff00':'#00aaff'}">{{item.title}}</label>
+                </div>
+                <div class="label-div">
+                    <label class="label-with-pointer" :style="{color:item.subject=='null'?'#ffff00':'#00aaff'}">{{item.createTime}}</label>
+                </div>
+            </div>
+            <div style="height:50px"/>
+        </div>
+    </div>
+</template>
+
+<script>
+import GetMyMemory from "../../graphql/MemoryPages/GetMyMemory.graphql"
+import ReadMemory from '../../graphql/MemoryPages/ReadMemory.graphql'
+
+export default {
+    data() {
+        return {
+            memories: [],
+            screenHeight: document.documentElement.clientHeight,
+            screenWidth: document.documentElement.clientWidth
+        }
+    },
+    mounted() {
+        this.$apollo.mutate({
+                mutation: GetMyMemory,
+                variables: {
+                    name: JSON.parse(localStorage.getItem('user')).name
+                }
+            }).then(data => {
+                console.log(data);
+                let result = data.data.getAllMemory;
+                if (!result.success) {
+                    alert(JSON.stringify(result.errors));
+                } else {
+                    const result_memories = [];
+                    for (let i = 0; i < result.memorys.length; i++) {
+                        const memory = {
+                            id: result.memorys[i].id,
+                            subject: result.memorys[i].subjectId+'',
+                            creatorUsername: result.memorys[i].creatorUsername,
+                            title: result.memorys[i].title,
+                            content: result.memorys[i].content,
+                            createTime: result.memorys[i].createTime.substr(0,10),
+                            visitor: result.memorys[i].visitor,
+                            privacy: result.memorys[i].privacy==0?false:true,
+                            activity: result.memorys[i].activity
+                        };
+                        result_memories.push(memory);
+                    }
+                    this.memories = result_memories;
+                }
+            }).catch(error => {
+                console.log(error);
+            });
+        window.onresize = () => {
+            return (() => {
+                window.screenWidth = document.documentElement.clientWidth
+                window.screenHeight = document.documentElement.clientHeight
+                this.screenHeight = document.documentElement.clientHeight
+                this.screenWidth = window.screenWidth
+            })()
+        }
+
+    },
+    methods: {
+        ReadMemory(memory) {
+            this.$apollo.mutate({
+                mutation: ReadMemory,
+                variables: {
+                    memoryId: memory.id,
+                    isOwner: memory.creatorUsername == JSON.parse(localStorage.getItem('user')).name?true:false
+                },
+            }).then(data=>{
+                console.log(data);
+                if(data.data.readOneMemory.success){
+                    this.$router.push({name:"memoryinfo", params:memory});
+                }
+            }).catch(error=>{
+                console.log(error);
+            });
+        }
+    }
+}
+</script>
+
+<style>
+    div.memorytile {
+        text-align: center;
+        margin-left: 25px;
+        width: 650px;
+        height: 100px;
+        border-bottom: 1px solid rgb(156, 128, 35);
+    }
+    div.memorytile:hover {
+        height: 100px;
+        border-bottom: 1px solid rgb(234,213,15);
+        cursor: pointer;
+    }
+    div.label-div {
+        float:left;
+        width:325px;
+        height:50px;
+        margin-top:25px
+    }
+    div.label-div:hover {
+        cursor: pointer;
+    }
+    label.label-with-pointer {
+        line-height: 50px;
+        font-size: 24px;
+        font-style: normal;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+    label.label-with-pointer:hover {
+        cursor: pointer;
+    }
+</style>

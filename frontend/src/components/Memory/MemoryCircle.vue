@@ -1,21 +1,36 @@
 <template>
-    <div>
-        <svg :width="exactSize" :height="exactSize">
+    <div @mouseenter="ishover = true" @mouseleave="ishover = false">
+        <svg v-if="!ishover" :width="randsize" :height="randsize" style="position:absolute" :style="{top:(200-randsize)/2+'px',left:(200-randsize)/2+'px'}">
             <defs>
                 <defs>
                     <radialGradient :id="radialGradientId">
                         <stop offset="0%" :stop-color="exactColor"/>
-                        <stop offset="80%" :stop-color="exactColor"/>
+                        <stop offset="40%" :stop-color="exactColor"/>
                         <stop offset="100%" stop-color="#000000"/>
                     </radialGradient>
                 </defs>
                 <mask :id="maskId">
-                    <circle :cx="exactSize / 2" :cy="exactSize / 2" :r="exactSize / 2" :fill="radialGradient" />
-                    <circle :cx="exactSize / 2" :cy="exactSize / 2" :r="radius" :fill="innerColor" />
+                    <circle :cx="randsize/2" :cy="randsize/2" :r="randsize/2" :fill="radialGradient" />
                 </mask>
             </defs>
             <rect width="100%" height="100%" :fill="fillColor" :mask="mask" />
-            <text x="50%" y="50%" :fill="exactColor" :style="{ fontSize: fontSize }">{{ title }}</text>
+        </svg>
+        <svg v-if="ishover" width="200" height="200" style="position:absolute;left:0;top:0">
+            <defs>
+                <defs>
+                    <radialGradient :id="radialGradientId">
+                        <stop offset="0%" :stop-color="innerColor"/>
+                        <stop offset="90%" :stop-color="innerColor"/>
+                        <stop offset="91%" :stop-color="exactColor"/>
+                        <stop offset="100%" stop-color="#000000"/>
+                    </radialGradient>
+                </defs>
+                <mask :id="maskId">
+                    <circle cx="100" cy="100" r="100" :fill="radialGradient" />
+                </mask>
+            </defs>
+            <rect width="100%" height="100%" :fill="fillColor" :mask="mask" />
+            <text x="50%" y="50%" :fill="exactColor" style="fontSize: xx-large">{{ title }}</text>
         </svg>
     </div>
 </template>
@@ -23,100 +38,35 @@
 <script>
     export default {
         name: 'MemoryCircle',
-        props: {
-            title: {
-                type: String,
-                default: ''
-            },
-            size: {
-                type: String,
-                validator: function (value) {
-                    return ['small', 'medium', 'large', 'x-large'].indexOf(value) !== -1
-                }
-            },
-            color: {
-                type: String,
-                validator: function (value) {
-                    return ['light-yellow', 'dark-yellow', 'light-blue', 'dark-blue'].indexOf(value) !== -1
-                }
-            },
-            displayId: {
-                type: Number,
-                default: 0
+        data() {
+            return {
+                ishover: false
             }
         },
+        props: {
+            title: String,
+            subject: String,
+            opacity: Number,
+            displayId: Number
+        },
         computed: {
-            exactSize() {
-                switch (this.size) {
-                    case 'x-large':
-                        return 650;
-                    case 'large':
-                        return 220;
-                    case 'medium':
-                        return 180;
-                    case 'small':
-                        return 150;
-                }
-                return 180;
-            },
-            radius() {
-                switch (this.size) {
-                    case 'x-large':
-                        return this.exactSize / 2 - 50;
-                    case 'large':
-                        return this.exactSize / 2 - 25;
-                    case 'medium':
-                        return this.exactSize / 2 - 22;
-                    case 'small':
-                        return this.exactSize / 2 - 18;
-                }
-                return 150;
+            randsize() {
+                return 20+Math.random()*10;
             },
             exactColor() {
-                switch (this.color) {
-                    case 'light-yellow':
-                    case 'dark-yellow':
-                        return '#ffff00';
-                    case 'light-blue':
-                    case 'dark-blue':
-                        return '#00aaff';
-                }
-                return '#ffff00';
+                if (this.subject == "null")
+                    return '#ffff00';   
+                return '#00aaff';
             },
             innerColor() {
-                switch (this.color) {
-                    case 'light-yellow':
-                    case 'dark-yellow':
-                        return '#666600';
-                    case 'light-blue':
-                    case 'dark-blue':
-                        return '#004466';
-                }
-                return '#666600';
+                if (this.subject == "null") 
+                    return 'rgba(255, 255, 0, 0.2)';
+                return 'rgba(0, 170, 255, 0.2)';
             },
             fillColor() {
-                switch (this.color) {
-                    case 'light-yellow':
-                        return 'rgba(255, 255, 0, 0.6)';
-                    case 'dark-yellow':
-                        return 'rgba(255, 255, 0, 0.3)';
-                    case 'light-blue':
-                        return 'rgba(0, 170, 255, 0.6)';
-                    case 'dark-blue':
-                        return 'rgba(0, 170, 255, 0.3)';
-                }
-                return 'rgba(255, 255, 0, 0.6)';
-            },
-            fontSize() {
-                switch (this.size) {
-                    case 'small':
-                        return 'large';
-                    case 'medium':
-                        return 'x-large';
-                    case 'large':
-                        return 'xx-large';
-                }
-                return 'x-large';
+                if (this.subject == "null")
+                    return 'rgba(255, 255, 0, '+this.opacity+')';   
+                return 'rgba(0, 170, 255, '+this.opacity+')';
             },
             radialGradientId() {
                 return `radial-gradient-${this.displayId}`
@@ -136,7 +86,6 @@
 
 <style scoped>
     text {
-        dominant-baseline: middle;
         text-anchor: middle;
     }
 </style>
