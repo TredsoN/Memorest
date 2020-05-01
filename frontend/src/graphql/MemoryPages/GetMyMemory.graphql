@@ -4,13 +4,15 @@ mutation GetMyMemory($name:String!) {
         memorys {
             id
             creatorUsername
-            subjectId
+            subjectName
             title
             content
             createTime
             visitor
             privacy
             activity
+            audio
+            picture
         }
     }
 }

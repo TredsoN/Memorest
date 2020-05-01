@@ -47,7 +47,6 @@
         height: 100%;
         position: fixed;
         background-size: 100% 100%;
-        overflow: auto;
     }
     div.background1 {
         background:url("./assets/Images/Image1.jpg");
@@ -57,7 +56,6 @@
         height:100%;
         position:fixed;
         background-size:100% 100%;
-        overflow: auto;
     }
     div.background2 {
         background:url("./assets/Images/Image2.jpg");
@@ -67,15 +65,33 @@
         height:100%;
         position:fixed;
         background-size:100% 100%;
-        overflow: auto;
     }
     div.background3 {
         background: url('./assets/Images/Image3.jpg');
         top: 0;
         left: 0;
+        width:100%;
+        height:100%;
         position: fixed;
         background-size: 100% 100%;
-        overflow: auto;
+    }
+    div.background4 {
+        background: url('./assets/Images/Image4.jpg');
+        top: 0;
+        left: 0;
+        width:100%;
+        height:100%;
+        position: fixed;
+        background-size: 100% 100%;
+    }
+    div.background5 {
+        background: url('./assets/Images/Image5.jpg');
+        top: 0;
+        left: 0;
+        width:100%;
+        height:100%;
+        position: fixed;
+        background-size: 100% 100%;
     }
     div.el-input {
         opacity: 0.6;
@@ -118,12 +134,12 @@
         border-color: transparent;
     }
     button.button-back:hover {
-        color: rgb(155,133,21);
+        color: rgb(234,213,15);
         background-color: transparent;
         border-color: transparent;
     }
     button.button-back:focus {
-        color: rgb(155,133,21);
+        color: rgb(234,213,15);
         background-color: transparent;
         border-color: transparent;
     }

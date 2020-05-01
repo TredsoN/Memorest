@@ -9,6 +9,10 @@ import Login from '../components/Pages/SignInOrUp'
 import CreateMemory from '../components/Pages/CreateMemory'
 import MemoryInfo from '../components/Pages/MemoryInfoPage.vue'
 import MyMemories from '../components/Pages/MyMemoriesPage.vue'
+import MemoryGrave from '../components/Pages/MemoryGravePage.vue'
+import NewsIntro from '../components/Pages/NewsIntroPage.vue'
+import NewsIndex from '../components/Pages/NewsIndexPage.vue'
+import NewsInfo from '../components/Pages/NewsInfoPage.vue'
 
 Vue.use(Router);
 
@@ -86,6 +90,38 @@ const router = new Router({
             component: MyMemories,
             meta: {
                 title: '我的记忆'
+            }
+        },
+        {
+            path: '/memorygrave',
+            name: 'memorygrave',
+            component: MemoryGrave,
+            meta: {
+                title: '记忆公墓'
+            }
+        },
+        {
+            path: '/newsintro',
+            name: 'newsintro',
+            component: NewsIntro,
+            meta: {
+                title: '关于阿兹海默'
+            }
+        },
+        {
+            path: '/newsindex',
+            name: 'newsindex',
+            component: NewsIndex,
+            meta: {
+                title: '资讯列表'
+            }
+        },
+        {
+            path: '/newsinfo',
+            name: 'newsinfo',
+            component: NewsInfo,
+            meta: {
+                title: '资讯详情'
             }
         }
     ]

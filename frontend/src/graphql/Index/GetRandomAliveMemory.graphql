@@ -4,12 +4,14 @@ mutation GetRandomAliveMemory {
         memorys {
             id
             creatorUsername
-            subjectId
+            subjectName
             title
             content
             createTime
             visitor
             activity
+            audio
+            picture
         }
     }
 }

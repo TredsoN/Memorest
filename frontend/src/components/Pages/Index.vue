@@ -1,7 +1,12 @@
 <template>
-    <div>
-        <div class="index" :style="{height:7*screenHeight>5*screenWidth?screenHeight+'px':5*screenWidth/7+'px',width:7*screenHeight>5*screenWidth?7*screenHeight/5+'px':screenWidth+'px'}"></div>
-        <div>
+    <div class="index">
+        <div v-if="!showMemory" class="goto-grave-box" style="text-align:center;height:80px;width:600px;position:absolute;font-size:28px;" :style="{top:(screenHeight-80)/2+'px',left:(screenWidth-600)/2+'px'}" @click="showMemory = true">
+            <label class="goto-grave-label">
+                如果记忆是一个罐头，我希望它永远不会过期
+            </label>
+        </div>
+        
+        <div v-if="showMemory">
             <div
                 v-for="(item, index) in memories" 
                 class="memory"
@@ -16,16 +21,28 @@
             </div>
         </div>
         <router-link v-if="!isLogined" :to="{ name: 'login' }">
-            <el-button class="button-common" style="text-align:right;width:200px;top:5px;right:20px;position:absolute;font-size:18px;">LOG IN</el-button>
+            <div class="goto-grave-box" style="top:5px;left:20px;text-align:left;font-size:18px">
+                <label class="goto-grave-label">LOG IN</label>
+            </div>
         </router-link>
-        <router-link v-else :to="{ name: 'personal' }">
-            <el-button class="button-common" style="text-align:right;width:200px;top:5px;right:20px;position:absolute;font-size:18px;">PERSONAL CENTER</el-button>
+        <router-link v-if="isLogined" :to="{ name: 'personal' }">
+            <div class="goto-grave-box" style="top:5px;left:20px;text-align:left;font-size:18px">
+                <label class="goto-grave-label">WELCOME, {{username}}</label>
+            </div>
         </router-link>
-        <div class="goto-grave-box">
-            <font-awesome-icon icon="chevron-left"/>
-            <label class="goto-grave-label"> MEMORY GRAVE</label>
-        </div>
-        <div class="create-memory">
+        <router-link :to="{ name: 'newsintro' }">
+            <div class="goto-grave-box" style="top:5px;right:20px;text-align:right;font-size:18px">
+                <label class="goto-grave-label">ABOUT ALZHEIMER </label>
+                <font-awesome-icon icon="comment-dots"/>
+            </div>
+        </router-link>
+        <router-link :to="{ name: 'memorygrave' }">
+            <div class="goto-grave-box" style="bottom:5px;left:20px;text-align:left;font-size:24px">
+                <font-awesome-icon icon="chevron-left"/>
+                <label class="goto-grave-label"> MEMORY GRAVE</label>
+            </div>
+        </router-link>
+        <div v-if="showMemory" class="create-memory">
             <font-awesome-icon icon="plus-circle" />
         </div>
     </div>
@@ -35,10 +52,10 @@
     import GetRandomAliveMemory from '../../graphql/Index/GetRandomAliveMemory.graphql';
     import ReadMemory from '../../graphql/MemoryPages/ReadMemory.graphql'
     import { library } from '@fortawesome/fontawesome-svg-core';
-    import { faPlusCircle, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+    import { faPlusCircle, faChevronLeft, faCommentDots} from '@fortawesome/free-solid-svg-icons';
     import MemoryCircle from '../Memory/MemoryCircle'
 
-    library.add(faPlusCircle, faChevronLeft);
+    library.add(faPlusCircle, faChevronLeft, faCommentDots);
 
     export default {
         name: 'Index',
@@ -47,7 +64,9 @@
         },
         data() {
             return {
+                showMemory: false,
                 isLogined: localStorage.getItem('token'),
+                username: localStorage.getItem('user')? JSON.parse(localStorage.getItem('user')).name : '',
                 memories: [],
                 screenWidth: document.documentElement.clientWidth,
                 screenHeight: document.documentElement.clientHeight,
@@ -71,21 +90,23 @@
                     for (let i = 0; i < result.memorys.length; i++) {
                         const memory = {
                             id: result.memorys[i].id,
-                            subject: result.memorys[i].subjectId+'',
+                            subject: result.memorys[i].subjectName,
                             creatorUsername: result.memorys[i].creatorUsername,
                             title: result.memorys[i].title,
                             content: result.memorys[i].content,
                             createTime: result.memorys[i].createTime.substr(0,10),
                             visitor: result.memorys[i].visitor,
                             privacy: true,
-                            activity: result.memorys[i].activity
+                            activity: result.memorys[i].activity,
+                            audio: result.memorys[i].audio,
+                            picture: result.memorys[i].picture
                         }
                         result_memories.push(memory)
                     }
                     this.memories = result_memories;
                 }
             }).catch(error => {
-                alert(JSON.stringify(error));
+                console.log(error);
             });
             window.onresize = () => {
                 return (() => {
@@ -126,13 +147,7 @@
         z-index: 999;
     }
     .goto-grave-box {
-        width: 200px;
-        height: 50px;
         position: fixed;
-        left: 20px;
-        bottom: 5px;
-        text-align: left;
-        font-size: 24px;
         color: rgb(234, 182, 15);
      }
     .goto-grave-box:hover {
@@ -148,13 +163,11 @@
         cursor: pointer;
     }
     .create-memory {
-        height: 70px;
-        width: 70px;
         position: fixed;
         right: 20px;
         bottom: 5px;
         font-size: 60px;
-        color: rgba(234,182,15,0.6);
+        color: rgb(234,182,15);
         text-align: center;
     }
     .create-memory:hover {

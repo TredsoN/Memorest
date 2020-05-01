@@ -1,0 +1,10 @@
+mutation GetAllNews{
+  getAllNews{
+    success
+    news{
+      title
+      content
+      time
+    }
+  }
+}

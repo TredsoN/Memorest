@@ -1,0 +1,8 @@
+mutation GetRandomAliveMemory {
+    getRandomDeadMemory {
+        success,
+        memorys {
+            title
+        }
+    }
+}

@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <div class="background2" :style="{height:7*screenHeight>5*screenWidth?screenHeight+'px':5*screenWidth/7+'px',width:7*screenHeight>5*screenWidth?7*screenHeight/5+'px':screenWidth+'px'}"></div>
-
+    <div class="background2">
         <router-link :to="{ name: 'login' }">
             <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
                 BACK

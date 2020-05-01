@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <div class="index" :style="{height:7*screenHeight>5*screenWidth?screenHeight+'px':5*screenWidth/7+'px',width:7*screenHeight>5*screenWidth?7*screenHeight/5+'px':screenWidth+'px'}"></div>
-
+    <div class="index">
         <el-button @click="$router.back(-1)" class="button-back" style="width:100px;top:5px;left:0;position:absolute">
             BACK
         </el-button>
@@ -22,25 +20,41 @@
             </defs>
             <rect width="100%" height="100%" :fill="outterColor" :mask="mask" />
         </svg>
+
         <div style="position:absolute" :style="{width:screenHeight*0.4+'px',height:screenHeight*0.1+'px',left:(screenWidth-screenHeight*0.4)/2+'px',top:screenHeight*0.15+'px'}">
             <label class="content-title" style="word-break:break-all;font-size:36px;line-height:30px" :style="{color:outterColor}">{{memory.title}}</label>
         </div>
-        <div v-if="isMine" style="position:absolute;text-align:left" :style="{width:screenHeight*0.55+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.55)/2+'px',top:screenHeight*0.25+'px'}">
-            <font-awesome-icon :icon="memory.privacy?['far','eye-slash']:['far','eye']" style="font-size:22px" :style="{color:memory.privacy?'gray':outterColor}"></font-awesome-icon>
-            <label class="text-button" @click="SetPrivate" style="line-height:30px;font-size:22px" :style="{color:memory.privacy?'gray':outterColor}">{{memory.privacy?" set private":" set public"}}</label>
+        <div style="position:absolute;text-align:left" :style="{width:screenHeight*0.6+'px',height:screenHeight*0.48+'px',left:(screenWidth-screenHeight*0.6)/2+'px',top:screenHeight*0.24+'px'}">
+            <vue-scroll :ops="scrollsetting"> 
+                <div v-if="memory.subject!=''">
+                    <label class="content-title" style="word-break:break-all;line-height:30px" :style="{color:outterColor}">#{{memory.subject}}</label>
+                    <br>
+                </div>
+                <div v-if="memory.audio==''">
+                    <aplayer :music="{title:'记忆留声',artist:memory.creatorUsername,src:memory.audio,pic:'http://106.13.41.151:8087/Memorest.jpg',theme:'rgb(234,213,15)'}"/>
+                    <br>
+                </div>
+                <div v-if="memory.picture==''">
+                    <img :width="screenHeight*0.5" src="http://106.13.41.151:8087/Memorest.jpg"/>
+                    <br><br>
+                </div>
+                <label class="content-title" style="word-break:break-all;line-height:30px" :style="{color:outterColor}">{{memory.content}}</label>
+                <div style="height:50px"/>
+            </vue-scroll>
         </div>
-        <div style="position:absolute;text-align:left;overflow:auto" :style="{width:screenHeight*0.55+'px',height:screenHeight*0.4+'px',left:(screenWidth-screenHeight*0.55)/2+'px',top:screenHeight*0.32+'px'}">
-            <label class="content-title" style="word-break:break-all;line-height:30px" :style="{color:outterColor}">{{memory.content}}</label>
-        </div>
-        <div style="position:absolute;text-align:right;overflow:visible" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.5)/2+'px',top:screenHeight*0.72+'px'}">
+        <div style="position:absolute;text-align:right;overflow:visible" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.4)/2+'px',top:screenHeight*0.73+'px'}">
             <label class="content-title" style="line-height:30px;font-size:18px" :style="{color:outterColor}">{{memory.creatorUsername}} {{memory.createTime}}</label>
         </div>
-        <div v-if="isMine" style="position:absolute;text-align:left" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.5)/2+'px',top:screenHeight*0.72+'px'}">
+        <div style="position:absolute;text-align:right;overflow:visible" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.5)/2+'px',top:screenHeight*0.78+'px'}">
+            <label class="content-title" style="line-height:30px;font-size:18px" :style="{color:outterColor}">visitor {{memory.visitor}}</label>
+        </div>
+        <div v-if="isMine" style="position:absolute;text-align:left" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.5)/2+'px',top:screenHeight*0.78+'px'}">
             <font-awesome-icon :icon="['far','trash-alt']" style="font-size:22px;color:red"></font-awesome-icon>
             <label class="text-button" @click="DeleteMemory" style="line-height:30px;font-size:22px;color:red"> delete</label>
         </div>
-        <div style="position:absolute;text-align:right;overflow:visible" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.5)/2+'px',top:screenHeight*0.77+'px'}">
-            <label class="content-title" style="line-height:30px;font-size:18px" :style="{color:outterColor}">visitor {{memory.visitor}}</label>
+        <div v-if="isMine" style="position:absolute;text-align:left" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.6)/2+'px',top:screenHeight*0.73+'px'}">
+            <font-awesome-icon :icon="memory.privacy?['far','eye-slash']:['far','eye']" style="font-size:22px" :style="{color:memory.privacy?'rgb(210,210,210)':outterColor}"></font-awesome-icon>
+            <label class="text-button" @click="SetPrivate" style="line-height:30px;font-size:22px" :style="{color:memory.privacy?'rgb(210,210,210)':outterColor}">{{memory.privacy?" set private":" set public"}}</label>
         </div>
     </div>
 </template>
@@ -52,12 +66,26 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { faEye } from '@fortawesome/free-regular-svg-icons';
 import { faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import aplayer from 'vue-aplayer'
 
 library.add(faTrashAlt, faEye, faEyeSlash);
 
 export default {
+    components:{
+        aplayer
+    },
     data() {
+        var ops = {
+            rail:{
+                size:"2px"
+                },
+            bar:{
+                opacity:0.5,
+                background:this.$route.params.subject == "null"?'#ffff00':'#00aaff'
+            }
+        }
         return {
+            scrollsetting: ops,
             memory: this.$route.params,
             screenHeight: document.documentElement.clientHeight,
             screenWidth: document.documentElement.clientWidth
@@ -65,17 +93,17 @@ export default {
     },
     computed: {
         innerColor() {
-            if(this.$route.params.subject == "null")
-                return 'rgba(255, 255, 0, 0.12)';
-            return 'rgba(0, 170, 255, 0.12)';
+            if(this.memory.subject == "")
+                return 'rgba(255, 255, 0, 0.2)';
+            return 'rgba(0, 170, 255, 0.2)';
         },
         outterColor() {
-            if(this.$route.params.subject == "null")
+            if(this.memory.subject == "")
                 return '#ffff00';
             return '#00aaff';
         },
         isMine() {
-            if(JSON.parse(localStorage.getItem('user')).name == this.$route.params.creatorUsername)
+            if(JSON.parse(localStorage.getItem('user')).name == this.memory.creatorUsername)
                 return true;
             return false;
         },

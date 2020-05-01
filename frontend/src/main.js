@@ -5,7 +5,9 @@ import apolloProvider from './utils/apolloClient.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import vuescroll from 'vuescroll';
 
+Vue.use(vuescroll); 
 
 router.beforeEach((to, from, next) => {
   if(to.meta.title) {
@@ -17,7 +19,6 @@ router.beforeEach((to, from, next) => {
 Vue.use(ElementUI);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.config.productionTip = false;
-
 
 new Vue({
     router,
