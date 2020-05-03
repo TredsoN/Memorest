@@ -48,8 +48,8 @@
     import {faChevronLeft, faPlusCircle, faTimes, faPaperPlane} from '@fortawesome/free-solid-svg-icons';
     import MemoryCircle from '../Memory/MemoryCircle';
     import CreateMemory from '../../graphql/CreateMemory/CreateMemory.graphql';
-    import error from '../../utils/error.js'
-    import RefershToken from "../../graphql/RefreshToken.graphql";
+    import error from '../../utils/error'
+    import RefershToken from '../../graphql/RefreshToken.graphql';
 
     library.add(faPlusCircle, faChevronLeft, faTimes, faPaperPlane);
 

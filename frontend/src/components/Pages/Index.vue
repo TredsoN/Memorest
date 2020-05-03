@@ -8,12 +8,12 @@
         
         <div v-if="showMemory">
             <div
-                v-for="(item, index) in memories" 
+                v-for="(item, index) in memories"
                 class="memory"
                 @click="ReadMemory(item)"
                 :key="item.id"
                 :style="{top:50+positionsRand[index][0]*(screenHeight-320)+'px',left:positionsRand[index][1]*(screenWidth-220)+'px'}">
-                <memory-circle 
+                <memory-circle
                     :title="item.title"
                     :subject="item.subject"
                     :opacity="item.activity/100"
@@ -42,9 +42,11 @@
                 <label class="goto-grave-label"> MEMORY GRAVE</label>
             </div>
         </router-link>
-        <div v-if="showMemory" class="create-memory">
-            <font-awesome-icon icon="plus-circle" />
-        </div>
+        <router-link :to="{ name: 'createMemory' }">
+            <div class="create-memory">
+                <font-awesome-icon icon="plus-circle" />
+            </div>
+        </router-link>
     </div>
 </template>
 
