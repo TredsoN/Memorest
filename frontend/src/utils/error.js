@@ -34,6 +34,12 @@ const error = {
 
     /* 创建记忆 */
     loginBeforeCreateMemory: 'Please login before creating memory!',
+    emptyTitle: 'Please input your title',
+    emptyContent: 'Please input your content',
+    tooManyPictures: 'Only one picture can be added to a memory',
+    tooManyAudios: 'Only one audio can be added to a memory',
+    wrongPicture: 'The uploaded file can only be in jpg / png / gif format!',
+    wrongAudio: 'The uploaded file can only be in mp3 / wav format!',
 
     /** 后端请求响应错误（后端返回的错误以 r 开头，前端显示的错误以 m 开头） **/
 

@@ -1,0 +1,9 @@
+mutation SearchSubject($keyword: String!) {
+    searchSubject(keyword: $keyword) {
+        subjects {
+            id
+            name
+        }
+        success
+    }
+}

@@ -58,7 +58,7 @@
         background-size:100% 100%;
     }
     div.background2 {
-        background:url("./assets/Images/Image2.jpg");
+        background:button-commonurl("./assets/Images/Image2.jpg");
         top: 0;
         left: 0;
         width:100%;

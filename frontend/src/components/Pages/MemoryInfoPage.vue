@@ -30,12 +30,18 @@
                     <label class="content-title" style="word-break:break-all;line-height:30px" :style="{color:outterColor}">#{{memory.subject}}</label>
                     <br>
                 </div>
-                <div v-if="memory.audio==''">
-                    <aplayer :music="{title:'记忆留声',artist:memory.creatorUsername,src:memory.audio,pic:'http://106.13.41.151:8087/Memorest.jpg',theme:'rgb(234,213,15)'}"/>
-                    <br>
+                <div v-if="memory.audio">
+                    <aplayer :music="{
+                        title:'记忆留声',
+                        artist:memory.creatorUsername,
+                        src:'http://106.13.41.151/media/music/' + audio,
+                        pic:'http://106.13.41.151:8087/Memorest.jpg',
+                        theme:'rgb(234,213,15)'}"/>
                 </div>
-                <div v-if="memory.picture==''">
-                    <img :width="screenHeight*0.5" src="http://106.13.41.151:8087/Memorest.jpg"/>
+                <div v-if="memory.picture">
+                    <img :width="screenHeight * 0.5"
+                         :src="'http://106.13.41.151/media/image/' + picture"
+                         alt=""/>
                     <br><br>
                 </div>
                 <label class="content-title" style="word-break:break-all;line-height:30px" :style="{color:outterColor}">{{memory.content}}</label>
@@ -92,6 +98,14 @@ export default {
         }
     },
     computed: {
+        picture() {
+            const pictures = this.memory.picture.split(',');
+            return pictures[pictures.length - 2];
+        },
+        audio() {
+            const audios = this.memory.audio.split(',');
+            return audios[audios.length - 2];
+        },
         innerColor() {
             if(this.memory.subject == "")
                 return 'rgba(255, 255, 0, 0.2)';
