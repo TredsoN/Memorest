@@ -42,7 +42,7 @@
                 <label class="goto-grave-label"> MEMORY GRAVE</label>
             </div>
         </router-link>
-        <router-link :to="{ name: 'createMemory' }">
+        <router-link :to="{ name: 'selectSubject' }">
             <div class="create-memory">
                 <font-awesome-icon icon="plus-circle" />
             </div>

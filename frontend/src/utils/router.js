@@ -6,6 +6,7 @@ import PasswordChange from '../components/Pages/PasswordChangePage.vue'
 import PasswordFind from '../components/Pages/PasswordFindPage.vue'
 import Index from '../components/Pages/Index'
 import Login from '../components/Pages/SignInOrUp'
+import SelectSubject from '../components/Pages/SelectSubject'
 import CreateMemory from '../components/Pages/CreateMemory'
 import MemoryInfo from '../components/Pages/MemoryInfoPage.vue'
 import MyMemories from '../components/Pages/MyMemoriesPage.vue'
@@ -34,6 +35,14 @@ const router = new Router({
             component: Login,
             meta: {
                 title: '登录'
+            }
+        },
+        {
+            path: '/select-subject',
+            name: 'selectSubject',
+            component: SelectSubject,
+            meta: {
+                title: '选择主题'
             }
         },
         {

@@ -1,5 +1,7 @@
 mutation CreateMemory($memoryData: MemoryInput!){
     createMemory(memoryData: $memoryData) {
         success
+        errors
+        pid
     }
 }
