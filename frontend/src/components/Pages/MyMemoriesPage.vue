@@ -1,12 +1,5 @@
 <template>
     <div class="background3">
-        
-        <router-link :to="{ name: 'personal' }">
-            <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
-                BACK
-            </el-button>
-        </router-link>
-
         <div class="page-panel" :style="{left: (screenWidth-700)/2+'px'}">
             <div style="height:50px">
                 <label class="title">MY MEMORIES</label>
@@ -16,10 +9,10 @@
                 <vue-scroll :ops="scrollsetting">
                     <div @click="ReadMemory(item)" v-for="(item) in memories" :key="item.id" class="memorytile">
                         <div class="label-div">
-                            <label class="label-with-pointer" :style="{color:item.subject=='null'?'#ffff00':'#00aaff'}">{{item.title}}</label>
+                            <label class="label-with-pointer" :style="{color:item.subject==''?'#ffff00':'#00aaff'}">{{item.title}}</label>
                         </div>
                         <div class="label-div">
-                            <label class="label-with-pointer" :style="{color:item.subject=='null'?'#ffff00':'#00aaff'}">{{item.createTime}}</label>
+                            <label class="label-with-pointer" :style="{color:item.subject==''?'#ffff00':'#00aaff'}">{{item.createTime}}</label>
                         </div>
                     </div>
                     <div style="height:50px"/>
@@ -80,6 +73,7 @@ export default {
                     };
                     result_memories.push(memory);
                 }
+                result_memories.reverse();
                 this.memories = result_memories;
             }
         }).catch(error => {
@@ -97,6 +91,7 @@ export default {
     },
     methods: {
         ReadMemory(memory) {
+            console.log(memory)
             this.$apollo.mutate({
                 mutation: ReadMemory,
                 variables: {

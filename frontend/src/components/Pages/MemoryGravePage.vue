@@ -6,18 +6,21 @@
             </label>
         </div>
 
-        <div v-if="showMemory">
-            <div
-                v-for="(item, index) in memories" 
-                class="memory"
-                :key="item"
-                :style="{top:50+positionsRand[index][0]*(screenHeight-320)+'px',left:positionsRand[index][1]*(screenWidth-220)+'px'}">
-                <memory-circle 
-                    :title="item"
-                    :display-id="index"/>
+        <transition name = "fade">
+            <div v-if="showMemory">
+                <div
+                    v-for="(item, index) in memories" 
+                    class="memory"
+                    :key="item"
+                    :style="{top:50+positionsRand[index][0]*(screenHeight-320)+'px',left:positionsRand[index][1]*(screenWidth-220)+'px'}">
+                    <memory-circle 
+                        :title="item"
+                        :display-id="index"/>
+                </div>
             </div>
-        </div>
-        <router-link :to="{ name: 'newsintro' }">
+        </transition>
+
+        <router-link :to="{ name: 'newsintro' }" target="_blank">
             <div class="goto-main-box" style="top:5px;right:20px;text-align:right;font-size:18px">
                 <label class="goto-main-label">ABOUT ALZHEIMER </label>
                 <font-awesome-icon icon="comment-dots"/>
@@ -53,8 +56,8 @@
                 screenWidth: document.documentElement.clientWidth,
                 screenHeight: document.documentElement.clientHeight,
                 positionsRand:[
-                    [0.98,1],[0.31,0.92],[0.68,0.88],[0.75,0.06],[0,0],
-                    [0.88,0.45],[0.45,0.32],[0.35,0.75],[0,1],[0.04,0.52],
+                    [0.45,0.32],[0.35,0.75],[0.31,0.92],[0.68,0.88],[0.75,0.06],
+                    [0.88,0.45],[0.98,1],[0,0],[0,1],[0.04,0.52],
                     [1,0.23],[0.49,0.16],[0.89,0.65],[0.41,0.55],[1,0.79],
                 ]
             }
@@ -109,5 +112,11 @@
     }
     .goto-main-label:hover {
         cursor: pointer;
+    }
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity 2s
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0
     }
 </style>

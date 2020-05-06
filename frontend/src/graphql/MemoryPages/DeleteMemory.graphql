@@ -1,4 +1,4 @@
-mutation DeleteMemory($memoryId:Int) {
+mutation DeleteMemory($memoryId:Int!) {
     deleteMemory(memoryId:$memoryId){
         success
     }

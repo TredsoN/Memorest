@@ -1,10 +1,5 @@
 <template>
-    <div class="background1">
-        <router-link :to="{ name: 'index' }">
-            <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
-                BACK
-            </el-button>
-        </router-link>
+    <div class="background2">
         <el-tabs v-model="activeTag">
             <el-tab-pane label="SIGN IN" name="signIn">
                 <el-form :model="signInForm"
@@ -27,8 +22,8 @@
                             </el-button>
                         </router-link>
                     </el-form-item>
-                    <el-button class="button-common" style="margin-top:20px;font-size: 24px;" type="primary"
-                               @click="login">START
+                    <el-button class="button-common" style="margin-top:20px;font-size: 24px;" type="primary" @click="login">
+                        START
                     </el-button>
                 </el-form>
             </el-tab-pane>
@@ -304,7 +299,7 @@
                                 email: this.signUpForm.email
                             };
                             localStorage.setItem('user', JSON.stringify(user));
-                            this.$router.go(-1);
+                            this.$router.push({name:'index'});
                         }
                     }).catch(error => {
                         console.log('error');
@@ -347,7 +342,7 @@
                                 email: result.user.email
                             };
                             localStorage.setItem('user', JSON.stringify(user));
-                            this.$router.go(-1);
+                            this.$router.push({name:'index'});
                         }
                     }).catch(error => {
                         alert(JSON.stringify(error));

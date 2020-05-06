@@ -1,11 +1,5 @@
 <template>
     <div class="background2">
-        <router-link :to="{ name: 'index' }">
-            <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
-                BACK
-            </el-button>
-        </router-link>
-
         <div class="page-panel" :style="{left: (screenWidth-700)/2+'px'}">
             <div style="height:50px">
                 <label class="title">MY</label>
@@ -24,7 +18,7 @@
                 <div style="float:left"><label class="content-info">{{user.email}}</label></div>
             </div>
             <div style="margin-top:50px;text-align:center">
-                <router-link :to="{ name: 'mymemories' }">
+                <router-link :to="{ name: 'mymemories' }" target="_blank">
                     <el-button class="button-common" style="font-size: 24px">MY MEMORIES</el-button>
                 </router-link>
             </div>
@@ -58,8 +52,10 @@ export default {
     },
     methods: {
         logout() {
-            localStorage.removeItem('user');
-            localStorage.removeItem('token');
+            if(confirm('Confirm to log out?')==true){
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+            }
         }
     }
 }

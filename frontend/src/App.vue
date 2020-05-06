@@ -58,7 +58,7 @@
         background-size:100% 100%;
     }
     div.background2 {
-        background:button-commonurl("./assets/Images/Image2.jpg");
+        background:url("./assets/Images/Image2.jpg");
         top: 0;
         left: 0;
         width:100%;
@@ -93,11 +93,15 @@
         position: fixed;
         background-size: 100% 100%;
     }
-    div.el-input {
+    div.el-input, div.el-textarea {
         opacity: 0.6;
     }
     div.el-form-item__error {
-        font-size: 16px;
+        font-size: 18px;
+    }
+    input.el-input__inner, textarea.el-textarea__inner {
+        font-size: 18px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     }
     button.button-inputside {
         outline: none;

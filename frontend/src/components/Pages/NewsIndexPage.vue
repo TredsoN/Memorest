@@ -1,11 +1,5 @@
 <template>
     <div class="background5">
-        <router-link :to="{ name: 'index' }">
-            <el-button class="button-back" style="width:100px;top:5px;left:0;position:absolute">
-                BACK
-            </el-button>
-        </router-link>
-
         <div style="color:rgb(225,225,225)" class="page-panel" :style="{left: (screenWidth-700)/2+'px'}">
             <div style="height:50px">
                 <label class="title" style="color:rgb(225,225,225)">NEWS</label>

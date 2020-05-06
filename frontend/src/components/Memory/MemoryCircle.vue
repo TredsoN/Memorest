@@ -30,7 +30,7 @@
                 </mask>
             </defs>
             <rect width="100%" height="100%" :fill="fillColor" :mask="mask" />
-            <text x="50%" y="50%" :fill="exactColor" style="fontSize: xx-large">{{ title }}</text>
+            <text x="50%" y="50%" :fill="exactColor" style="fontSize:24px">{{ title }}</text>
         </svg>
     </div>
 </template>

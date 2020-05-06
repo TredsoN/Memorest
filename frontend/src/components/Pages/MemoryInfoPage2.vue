@@ -1,11 +1,5 @@
 <template>
     <div class="index">
-        <router-link to>
-            <el-button @click="$router.back(-1)" class="button-back" style="width:100px;top:5px;left:0;position:absolute">
-                BACK
-            </el-button>
-        </router-link>
-
         <svg :width="screenHeight*0.9" :height="screenHeight*0.9" style="position:absolute" :style="{left:(screenWidth-screenHeight*0.9)/2,top:screenHeight*0.05}">
             <defs>
                 <defs>
@@ -57,14 +51,6 @@
         <div style="position:absolute;text-align:right;overflow:visible" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.5)/2+'px',top:screenHeight*0.78+'px'}">
             <label class="content-title" style="line-height:30px;font-size:18px" :style="{color:outterColor}">visitor {{memory.visitor}}</label>
         </div>
-        <div v-if="isMine" style="position:absolute;text-align:left" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.5)/2+'px',top:screenHeight*0.78+'px'}">
-            <font-awesome-icon :icon="['far','trash-alt']" style="font-size:22px;color:red"></font-awesome-icon>
-            <label class="text-button" @click="DeleteMemory" style="line-height:30px;font-size:22px;color:red"> delete</label>
-        </div>
-        <div v-if="isMine" style="position:absolute;text-align:left" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.6)/2+'px',top:screenHeight*0.73+'px'}">
-            <font-awesome-icon :icon="memory.privacy?['far','eye-slash']:['far','eye']" style="font-size:22px" :style="{color:memory.privacy?'rgb(210,210,210)':outterColor}"></font-awesome-icon>
-            <label class="text-button" @click="SetPrivate" style="line-height:30px;font-size:22px" :style="{color:memory.privacy?'rgb(210,210,210)':outterColor}">{{memory.privacy?" set private":" set public"}}</label>
-        </div>
     </div>
 </template>
 
@@ -90,12 +76,12 @@ export default {
                 },
             bar:{
                 opacity:0.5,
-                background:this.$route.params.subject == ""?'#ffff00':'#00aaff'
+                background:this.$route.query.subject == ""?'#ffff00':'#00aaff'
             }
         }
         return {
             scrollsetting: ops,
-            memory: this.$route.params,
+            memory: this.$route.query,
             screenHeight: document.documentElement.clientHeight,
             screenWidth: document.documentElement.clientWidth
         }
@@ -118,13 +104,6 @@ export default {
             if(this.memory.subject == "")
                 return '#ffff00';
             return '#00aaff';
-        },
-        isMine() {
-            if(!localStorage.getItem('token'))
-                return false;
-            if(JSON.parse(localStorage.getItem('user')).name == this.memory.creatorUsername)
-                return true;
-            return false;
         },
         radialGradientId() {
             return `radial-gradient-${this.displayId}`
@@ -167,21 +146,19 @@ export default {
             });
         },
         DeleteMemory() {
-            if(confirm('Confirm to delete?')==true){
-                this.$apollo.mutate({
-                    mutation: DeleteMemory,
-                    variables: {
-                        memoryId: this.memory.id,
-                    },
-                }).then(data=>{
-                    console.log(data);
-                    if(data.data.deleteMemory.success){
-                        this.$router.go(-1)
-                    }
-                }).catch(error=>{
-                    console.log(error);
-                });
-            }
+            this.$apollo.mutate({
+                mutation: DeleteMemory,
+                variables: {
+                    memoryId: this.memory.id,
+                },
+            }).then(data=>{
+                console.log(data);
+                if(data.data.DeleteMemory.success){
+                    this.memory.privacy = !this.memory.privacy;
+                }
+            }).catch(error=>{
+                console.log(error);
+            });
         }
     }
 }

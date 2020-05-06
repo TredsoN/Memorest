@@ -9,6 +9,7 @@ import Login from '../components/Pages/SignInOrUp'
 import SelectSubject from '../components/Pages/SelectSubject'
 import CreateMemory from '../components/Pages/CreateMemory'
 import MemoryInfo from '../components/Pages/MemoryInfoPage.vue'
+import MemoryInfo2 from '../components/Pages/MemoryInfoPage2.vue'
 import MyMemories from '../components/Pages/MyMemoriesPage.vue'
 import MemoryGrave from '../components/Pages/MemoryGravePage.vue'
 import NewsIntro from '../components/Pages/NewsIntroPage.vue'
@@ -26,7 +27,7 @@ const router = new Router({
             name: 'index',
             component: Index,
             meta: {
-                title: '记忆森林'
+                title: '记忆森林',
             }
         },
         {
@@ -90,7 +91,15 @@ const router = new Router({
             name: 'memoryinfo',
             component: MemoryInfo,
             meta: {
-                title: '记忆详情'
+                title: '记忆详情',
+            }
+        },
+        {
+            path: '/indexmemoryinfo',
+            name: 'indexmemoryinfo',
+            component: MemoryInfo2,
+            meta: {
+                title: '记忆详情',
             }
         },
         {

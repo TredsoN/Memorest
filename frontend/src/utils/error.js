@@ -33,7 +33,6 @@ const error = {
     incorrectCode: 'Verification code is 4 digits',
 
     /* 创建记忆 */
-    loginBeforeCreateMemory: 'Please login before creating memory!',
     emptyTitle: 'Please input your title',
     emptyContent: 'Please input your content',
     tooManyPictures: 'Only one picture can be added to a memory',

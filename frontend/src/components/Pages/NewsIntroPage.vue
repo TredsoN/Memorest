@@ -1,9 +1,5 @@
 <template>
     <div class="background5">
-        <el-button  @click="$router.back(-1)" class="button-back" style="width:100px;top:5px;left:0;position:absolute">
-            BACK
-        </el-button>
-
         <router-link :to="{ name: 'newsindex' }">
             <div class="with-shadow" :style="{top:(screenHeight-300)/2+'px',left:(screenWidth-800)/2+'px'}">
                 <div style="position:absolute;width:700px;height:150px;color:rgb(225,225,225);text-align:left;font-size:24px;top:20px;left:50px">

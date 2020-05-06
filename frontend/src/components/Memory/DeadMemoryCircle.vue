@@ -1,21 +1,6 @@
 <template>
-    <div @mouseenter="ishover = true" @mouseleave="ishover = false">
-        <svg v-if="!ishover" :width="randsize" :height="randsize" style="position:absolute" :style="{top:(randbigsize-randsize)/2+'px',left:(randbigsize-randsize)/2+'px'}">
-            <defs>
-                <defs>
-                    <radialGradient :id="radialGradientId">
-                        <stop offset="0%" stop-color="rgb(110,110,110)"/>
-                        <stop offset="40%" stop-color="rgb(110,110,110)"/>
-                        <stop offset="100%" stop-color="#000000"/>
-                    </radialGradient>
-                </defs>
-                <mask :id="maskId">
-                    <circle :cx="randsize/2" :cy="randsize/2" :r="randsize/2" :fill="radialGradient" />
-                </mask>
-            </defs>
-            <rect width="100%" height="100%" fill="rgb(110,110,110)" :mask="mask" />
-        </svg>
-        <svg v-if="ishover" :width="randbigsize" :height="randbigsize" style="position:absolute;left:0;top:0">
+    <div>
+        <svg  :width="randbigsize" :height="randbigsize" style="position:absolute;left:0;top:0">
             <defs>
                 <defs>
                     <radialGradient :id="radialGradientId">
@@ -30,7 +15,7 @@
                 </mask>
             </defs>
             <rect width="100%" height="100%" fill="rgb(110,110,110)" :mask="mask" />
-            <text x="50%" y="50%" fill="rgb(225,225,225)" style="fontSize: xx-large">{{ title }}</text>
+            <text x="50%" y="50%" fill="rgb(225,225,225)" style="fontSize:24px">{{ title }}</text>
         </svg>
     </div>
 </template>
@@ -40,7 +25,6 @@
         name: 'MemoryCircle',
         data() {
             return {
-                ishover: false
             }
         },
         props: {

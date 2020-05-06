@@ -1,54 +1,70 @@
 <template>
-    <div class="create-memory">
-        <el-button @click="back" class="button-back" style="width: 100px; top: 5px; left: 0; position: absolute;">
-            BACK
-        </el-button>
-        <div class="form">
-            <el-form :hide-required-asterisk="true"
-                     :model="createMemoryForm"
-                     :rules="createMemoryRules"
-                     ref="createMemoryForm">
-                <label style="font-size: 24px; color: rgb(234,213,15);">主题：{{ subjectName }}</label><br/>
-                <el-form-item class="memory-title" prop="title">
-                    <el-input style="height: 150px;" v-model="createMemoryForm.title"></el-input>
-                </el-form-item>
-                <el-form-item class="memory-title" prop="content">
-                    <el-input class="memory-content"
-                              rows="10"
-                              type="textarea"
-                              v-model="createMemoryForm.content"></el-input>
-                </el-form-item>
-                <div class="private">
-                    <font-awesome-icon :icon="createMemoryForm.privacy ? ['far', 'eye-slash'] : ['far', 'eye']"
-                                       :style="{color : createMemoryForm.privacy ? 'rgb(210,210,210)' : '#ffff00'}"
-                                       @click="setPrivate"
-                                       style="font-size: 22px;"></font-awesome-icon>
-                    <label :style="{color : createMemoryForm.privacy ? 'rgb(210,210,210)' : '#ffff00'}"
-                           @click="setPrivate"
-                           class="text-button"
-                           style="line-height: 30px; font-size: 22px;">
-                        {{ createMemoryForm.privacy ? ' set private' : ' set public' }}</label>
-                </div>
-                <el-button @click="submit"
-                           class="button-common create"
-                           style="font-size: 24px;"
-                           type="primary">
-                    <font-awesome-icon icon="paper-plane"/>
-                    CREATE
-                </el-button>
-            </el-form>
+    <div class="index">
+        <svg :width="screenHeight*0.9" :height="screenHeight*0.9" style="position:absolute" :style="{left:(screenWidth-screenHeight*0.9)/2,top:screenHeight*0.05}">
+            <defs>
+                <defs>
+                    <radialGradient :id="radialGradientId">
+                        <stop offset="0%" stop-color="#000000"/>
+                        <stop offset="90%" stop-color="#000000"/>
+                        <stop offset="91%" stop-color="#ffff00"/>
+                        <stop offset="100%" stop-color="#000000"/>
+                    </radialGradient>
+                </defs>
+                <mask :id="maskId">
+                    <circle :cx="screenHeight*0.45" :cy="screenHeight*0.45" :r="screenHeight*0.45" :fill="radialGradient" />
+                </mask>
+            </defs>
+            <rect width="100%" height="100%" fill="#ffff00" :mask="mask" />
+        </svg>
+
+        <el-form :hide-required-asterisk="true"
+            :model="createMemoryForm"
+            :rules="createMemoryRules"
+            ref="createMemoryForm">
+            <el-form-item prop="title" style="position:absolute;text-align:center;height:50px" :style="{width:screenHeight*0.6+'px', left:(screenWidth-screenHeight*0.6)/2+'px',top:screenHeight*0.25+'px'}">
+                <el-input style="width:height:150px;" v-model="createMemoryForm.title"></el-input>
+            </el-form-item>
+            <el-form-item prop="content" style="position:absolute;text-align:center" :style="{width:screenHeight*0.6+'px', left:(screenWidth-screenHeight*0.6)/2+'px',top:screenHeight*0.35+'px'}">
+                <el-input
+                    rows="8"
+                    type="textarea"
+                    v-model="createMemoryForm.content"></el-input>
+            </el-form-item>
+        </el-form>
+
+        <div style="position:absolute" :style="{width:screenHeight*0.4+'px',height:screenHeight*0.1+'px',left:(screenWidth-screenHeight*0.4)/2+'px',top:screenHeight*0.15+'px'}">
+            <label class="content-title">{{ subjectName!=''?'Topic: '+subjectName:'No Topic' }}</label>
         </div>
-        <div class="add">
+        <div style="position:absolute;text-align:right;line-height:30px;font-size:22px" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.4)/2+'px',top:screenHeight*0.71+'px'}">
+            <label class="text-button" @click="submit" style="color:#ffff00">publish </label>
+            <font-awesome-icon icon="paper-plane" style="color:#ffff00"/>
+        </div>
+        <div style="position:absolute;text-align:left;line-height:30px;font-size:22px" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.6)/2+'px',top:screenHeight*0.71+'px'}">
+            <font-awesome-icon :icon="createMemoryForm.privacy ? ['far', 'eye-slash'] : ['far', 'eye']"
+                :style="{color : createMemoryForm.privacy ? 'rgb(210,210,210)' : '#ffff00'}"
+                @click="setPrivate"></font-awesome-icon>
+            <label :style="{color : createMemoryForm.privacy ? 'rgb(210,210,210)' : '#ffff00'}"
+                @click="setPrivate"
+                class="text-button">
+                {{ createMemoryForm.privacy ? ' set private' : ' set public' }}</label>
+        </div>
+        <div @click="back" class="goto-grave-box" style="line-height:30px;font-size:24px;position:absolute;text-align:center;width:100px;height:50px" :style="{left:(screenWidth-100)/2+'px',top:screenHeight*0.8+'px'}">
+            <font-awesome-icon icon="chevron-left"/>
+            <label class="goto-grave-label"> BACK</label> 
+        </div>
+
+        <div class="add" :style="{top:screenHeight*0.95-80+'px',left:(screenWidth*0.5+screenHeight*0.45-80)+'px'}">
             <el-popover
-                    placement="top"
-                    trigger="click"
-                    width="150">
+                placement="top"
+                trigger="click">
                 <el-upload :before-upload="beforeUploadPicture"
-                           :http-request="addPicture"
-                           :limit="1"
-                           :on-exceed="handlePictureExceed"
-                           action="null">
-                    <el-button>Add a picture</el-button>
+                    :http-request="addPicture"
+                    :limit="1"
+                    :on-exceed="handlePictureExceed"
+                    action="null">
+                    <el-button class="upload-button">
+                        Add a photo
+                    </el-button>
                 </el-upload>
                 <br/>
                 <el-upload :before-upload="beforeUploadAudio"
@@ -56,7 +72,9 @@
                            :limit="1"
                            :on-exceed="handleAudioExceed"
                            action="null">
-                    <el-button>Add an audio</el-button>
+                    <el-button class="upload-button">
+                        Add an audio
+                    </el-button>
                 </el-upload>
                 <font-awesome-icon icon="plus-circle" slot="reference"/>
             </el-popover>
@@ -79,6 +97,8 @@
             return {
                 subjectId: this.$route.params.subjectId,
                 subjectName: this.$route.params.subjectName,
+                screenHeight: document.documentElement.clientHeight,
+                screenWidth: document.documentElement.clientWidth,
                 createMemoryForm: {
                     title: '',
                     content: '',
@@ -102,6 +122,30 @@
                         }
                     ]
                 }
+            }
+        },
+        mounted() {
+            window.onresize = () => {
+            return (() => {
+                window.screenWidth = document.documentElement.clientWidth
+                window.screenHeight = document.documentElement.clientHeight
+                this.screenHeight = document.documentElement.clientHeight
+                this.screenWidth = window.screenWidth
+            })()
+            }
+        },
+        computed: {
+            radialGradientId() {
+                return `radial-gradient-${this.displayId}`
+            },
+            radialGradient() {
+                return `url(#${this.radialGradientId})`
+            },
+            maskId() {
+                return `mask-${this.displayId}`
+            },
+            mask() {
+                return `url(#${this.maskId})`
             }
         },
         methods: {
@@ -168,17 +212,31 @@
             },
             createMemory() {
                 const that = this;
+                var memoryData = null;
+                if(this.subjectId == '')
+                    memoryData = {
+                        creatorUsername: JSON.parse(localStorage.getItem('user')).name,
+                        title: this.createMemoryForm.title,
+                        content: this.createMemoryForm.content,
+                        privacy: this.createMemoryForm.privacy ? 1 : 0,
+                        picture: '',
+                        audio: '',
+                    }
+                else
+                    memoryData = {
+                        creatorUsername: JSON.parse(localStorage.getItem('user')).name,
+                        title: this.createMemoryForm.title,
+                        content: this.createMemoryForm.content,
+                        privacy: this.createMemoryForm.privacy ? 0 : 1,
+                        picture: '',
+                        audio: '',
+                        subjectId: this.subjectId,
+                        subjectName: this.subjectName
+                    }
                 this.$apollo.mutate({
                     mutation: CreateMemory,
                     variables: {
-                        memoryData: {
-                            creatorUsername: JSON.parse(localStorage.getItem('user')).name,
-                            title: this.createMemoryForm.title,
-                            content: this.createMemoryForm.content,
-                            privacy: this.createMemoryForm.privacy ? 0 : 1,
-                            picture: '',
-                            audio: ''
-                        }
+                        memoryData: memoryData
                     },
                     client: 'withtoken'
                 }).then(data => {
@@ -215,7 +273,8 @@
             },
             uploadAudio(memoryId, file) {
                 if (!file) {
-                    this.$router.push('mymemories');
+                    alert("Published successfully!")
+                    window.close()
                     return
                 }
                 const data = new FormData();
@@ -227,7 +286,8 @@
                 this.$axios.post('http://106.13.41.151/img/save/', data, config)
                     .then(response => {
                         console.log(response.data);
-                        this.$router.push('mymemories');
+                        alert("Published successfully!")
+                        window.close()
                     });
             }
         }
@@ -235,27 +295,6 @@
 </script>
 
 <style scoped>
-    .create-memory {
-        background: url('../../assets/Images/index.jpg');
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        background-size: 100% 100%;
-        overflow: auto;
-    }
-
-    .form {
-        width: 650px;
-        height: 650px;
-        border-radius: 50%;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-    }
-
     .memory-title {
         width: 400px;
         position: absolute;
@@ -263,7 +302,6 @@
         left: 50%;
         transform: translate(-50%, -50%);
     }
-
     .memory-content {
         width: 400px;
         position: absolute;
@@ -271,27 +309,15 @@
         left: 50%;
         transform: translate(-50%, -50%);
     }
-
-    .private {
-        position: absolute;
-        bottom: 100px;
-        left: 100px;
-    }
-
-    .create {
-        position: absolute;
-        bottom: 100px;
-        right: 100px;
-        color: rgb(234, 182, 15);
-    }
-
     .add {
         position: fixed;
-        right: 250px;
-        bottom: 50px;
-        color: rgb(234, 182, 15);
+        font-size: 60px;
+        color: rgba(255,255,0,0.6);
     }
-
+    .add:hover {
+        color: rgb(255,255,0);
+        cursor: pointer;
+    }
     .el-checkbox >>> .el-checkbox__inner {
         display: inline-block;
         position: relative;
@@ -304,9 +330,19 @@
         z-index: 1;
         transition: border-color .25s cubic-bezier(.71, -.46, .29, 1.46), background-color .25s cubic-bezier(.71, -.46, .29, 1.46);
     }
-
     .el-checkbox >>> .el-checkbox__label {
         font-size: 24px;
         color: #00aaff;
+    }
+    button.upload-button {
+        font-style: normal;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: 18px;
+        width: 150px;
+        color: rgb(234,213,15);
+    }
+    button.upload-button:hover {
+        border-color: rgb(255,255,0);
+        background-color: rgba(255,255,0,0.1);
     }
 </style>
