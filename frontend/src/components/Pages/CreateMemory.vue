@@ -117,6 +117,7 @@
                     return true;
                 } else {
                     alert(error.wrongPicture);
+                    return false;
                 }
             },
             beforeUploadAudio(file) {
@@ -125,6 +126,7 @@
                     return true;
                 } else {
                     alert(error.wrongAudio);
+                    return false;
                 }
             },
             handlePictureExceed() {
