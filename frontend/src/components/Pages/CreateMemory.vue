@@ -265,7 +265,7 @@
                     headers: {'Content-Type': 'multipart/form-data'}
                 };
                 const that = this;
-                this.$axios.post('http://106.13.41.151/img/save/', data, config)
+                this.$axios.post('/api/img/save/', data, config)
                     .then(response => {
                         console.log(response.data);
                         that.uploadAudio(memoryId, that.createMemoryForm.audio);
@@ -283,7 +283,7 @@
                 const config = {
                     headers: {'Content-Type': 'multipart/form-data'}
                 };
-                this.$axios.post('http://106.13.41.151/img/save/', data, config)
+                this.$axios.post('/api/img/save/', data, config)
                     .then(response => {
                         console.log(response.data);
                         alert("Published successfully!")

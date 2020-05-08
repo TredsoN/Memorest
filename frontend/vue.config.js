@@ -10,4 +10,16 @@ module.exports = {
             .loader('graphql-tag/loader')
             .end()
     },
+    devServer : {
+        port: 8080,
+        proxy : {
+            '/api': {
+                target: 'http://106.13.41.151',
+                changeOrigin: true,
+                pathRewrite:{
+                    '^/api':''
+                }
+            }
+        }
+    }
 };
