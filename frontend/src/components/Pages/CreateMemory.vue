@@ -22,7 +22,7 @@
             :rules="createMemoryRules"
             ref="createMemoryForm">
             <el-form-item prop="title" style="position:absolute;text-align:center;height:50px" :style="{width:screenHeight*0.6+'px', left:(screenWidth-screenHeight*0.6)/2+'px',top:screenHeight*0.25+'px'}">
-                <el-input style="width:height:150px;" v-model="createMemoryForm.title"></el-input>
+                <el-input style="width:height:150px;" v-model="createMemoryForm.title" maxlength="8"></el-input>
             </el-form-item>
             <el-form-item prop="content" style="position:absolute;text-align:center" :style="{width:screenHeight*0.6+'px', left:(screenWidth-screenHeight*0.6)/2+'px',top:screenHeight*0.35+'px'}">
                 <el-input
