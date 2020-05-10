@@ -204,4 +204,41 @@
         width: 100%;
         border: 1px solid rgb(234,213,15);
     }
+    div.page-panel {
+        position: absolute;
+        top: 50px;
+        width: 700px;
+        text-align:left;
+        z-index: 10;
+    }
+    div.memorytile {
+        text-align: center;
+        margin-left: 25px;
+        width: 650px;
+        height: 100px;
+        border-bottom: 1px solid rgb(156, 128, 35);
+    }
+    div.memorytile:hover {
+        height: 100px;
+        border-bottom: 1px solid rgb(234,213,15);
+        cursor: pointer;
+    }
+    div.label-div {
+        float:left;
+        width:325px;
+        height:50px;
+        margin-top:25px
+    }
+    div.label-div:hover {
+        cursor: pointer;
+    }
+    label.label-with-pointer {
+        line-height: 50px;
+        font-size: 24px;
+        font-style: normal;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+    label.label-with-pointer:hover {
+        cursor: pointer;
+    }
 </style>

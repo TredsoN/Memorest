@@ -1,0 +1,9 @@
+mutation GetMyMemory($name:String!) {
+    getAllMemory(creatorUsername:$name, aliveOnly:false){
+        success
+        memorys {
+            title
+            createTime
+        }
+    }
+}

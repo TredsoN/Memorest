@@ -33,10 +33,10 @@
         },
         computed: {
             randsize() {
-                return 20+Math.random()*10;
+                return 15+Math.random()*10;
             },
             randbigsize() {
-                return 150+Math.random()*100;
+                return 200+Math.random()*50;
             },
             radialGradientId() {
                 return `radial-gradient-${this.displayId}`

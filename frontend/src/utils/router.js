@@ -1,26 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Personal from '../components/Pages/PersonalPage.vue'
-import InfoChange from '../components/Pages/InfoChangePage.vue'
-import PasswordChange from '../components/Pages/PasswordChangePage.vue'
-import PasswordFind from '../components/Pages/PasswordFindPage.vue'
 import Index from '../components/Pages/Index'
-import Login from '../components/Pages/SignInOrUp'
-import SelectSubject from '../components/Pages/SelectSubject'
-import CreateMemory from '../components/Pages/CreateMemory'
-import MemoryInfo from '../components/Pages/MemoryInfoPage.vue'
-import MemoryInfo2 from '../components/Pages/MemoryInfoPage2.vue'
-import MyMemories from '../components/Pages/MyMemoriesPage.vue'
-import MemoryGrave from '../components/Pages/MemoryGravePage.vue'
-import NewsIntro from '../components/Pages/NewsIntroPage.vue'
-import NewsIndex from '../components/Pages/NewsIndexPage.vue'
-import NewsInfo from '../components/Pages/NewsInfoPage.vue'
 
 Vue.use(Router);
 
 
 const router = new Router({
-    mode: 'history',
+    mode: 'hash',
     routes: [
         {
             path: '/',
@@ -33,7 +19,7 @@ const router = new Router({
         {
             path: '/login',
             name: 'login',
-            component: Login,
+            component: resolve=>(require(["../components/Pages/SignInOrUp"],resolve)),
             meta: {
                 title: '登录'
             }
@@ -41,7 +27,7 @@ const router = new Router({
         {
             path: '/select-subject',
             name: 'selectSubject',
-            component: SelectSubject,
+            component: resolve=>(require(["../components/Pages/SelectSubject"],resolve)),
             meta: {
                 title: '选择主题'
             }
@@ -49,7 +35,7 @@ const router = new Router({
         {
             path: '/create-memory',
             name: 'createMemory',
-            component: CreateMemory,
+            component: resolve=>(require(["../components/Pages/CreateMemory"],resolve)),
             meta: {
                 title: '发布记忆'
             }
@@ -57,7 +43,7 @@ const router = new Router({
         {
             path: '/personal',
             name: 'personal',
-            component: Personal,
+            component: resolve=>(require(["../components/Pages/PersonalPage"],resolve)),
             meta: {
                 title: '个人中心'
             }
@@ -65,7 +51,7 @@ const router = new Router({
         {
             path: '/infochange',
             name: 'infochange',
-            component: InfoChange,
+            component: resolve=>(require(["../components/Pages/InfoChangePage"],resolve)),
             meta: {
                 title: '修改信息'
             }
@@ -73,7 +59,7 @@ const router = new Router({
         {
             path: '/passwordchange',
             name: 'passwordchange',
-            component: PasswordChange,
+            component: resolve=>(require(["../components/Pages/PasswordChangePage"],resolve)),
             meta: {
                 title: '修改密码'
             }
@@ -81,7 +67,7 @@ const router = new Router({
         {
             path: '/passwordfind',
             name: 'passwordfind',
-            component: PasswordFind,
+            component: resolve=>(require(["../components/Pages/PasswordFindPage"],resolve)),
             meta: {
                 title: '找回密码'
             }
@@ -89,7 +75,7 @@ const router = new Router({
         {
             path: '/memoryinfo',
             name: 'memoryinfo',
-            component: MemoryInfo,
+            component: resolve=>(require(["../components/Pages/MemoryInfoPage"],resolve)),
             meta: {
                 title: '记忆详情',
             }
@@ -97,7 +83,7 @@ const router = new Router({
         {
             path: '/indexmemoryinfo',
             name: 'indexmemoryinfo',
-            component: MemoryInfo2,
+            component: resolve=>(require(["../components/Pages/MemoryInfoPage2"],resolve)),
             meta: {
                 title: '记忆详情',
             }
@@ -105,7 +91,15 @@ const router = new Router({
         {
             path: '/mymemories',
             name: 'mymemories',
-            component: MyMemories,
+            component: resolve=>(require(["../components/Pages/MyMemoriesPage"],resolve)),
+            meta: {
+                title: '我的记忆'
+            }
+        },
+        {
+            path: '/myforgottenmemories',
+            name: 'myforgottenmemories',
+            component: resolve=>(require(["../components/Pages/MyDeadMemoriesPage"],resolve)),
             meta: {
                 title: '我的记忆'
             }
@@ -113,7 +107,7 @@ const router = new Router({
         {
             path: '/memorygrave',
             name: 'memorygrave',
-            component: MemoryGrave,
+            component: resolve=>(require(["../components/Pages/MemoryGravePage"],resolve)),
             meta: {
                 title: '记忆公墓'
             }
@@ -121,7 +115,7 @@ const router = new Router({
         {
             path: '/newsintro',
             name: 'newsintro',
-            component: NewsIntro,
+            component: resolve=>(require(["../components/Pages/NewsIntroPage"],resolve)),
             meta: {
                 title: '关于阿兹海默'
             }
@@ -129,7 +123,7 @@ const router = new Router({
         {
             path: '/newsindex',
             name: 'newsindex',
-            component: NewsIndex,
+            component: resolve=>(require(["../components/Pages/NewsIndexPage"],resolve)),
             meta: {
                 title: '资讯列表'
             }
@@ -137,7 +131,7 @@ const router = new Router({
         {
             path: '/newsinfo',
             name: 'newsinfo',
-            component: NewsInfo,
+            component: resolve=>(require(["../components/Pages/NewsInfoPage"],resolve)),
             meta: {
                 title: '资讯详情'
             }

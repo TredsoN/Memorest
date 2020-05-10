@@ -13,7 +13,7 @@
                     class="memory"
                     @click="ReadMemory(item)"
                     :key="item.id"
-                    :style="{top:50+positionsRand[index][0]*(screenHeight-370)+'px',left:positionsRand[index][1]*(screenWidth-270)+'px'}">
+                    :style="{top:50+positionsRand[index][0]*(screenHeight-320)+'px',left:positionsRand[index][1]*(screenWidth-270)+'px'}">
                     <memory-circle
                         :title="item.title"
                         :subject="item.subject"
@@ -123,7 +123,8 @@
         methods: {
             ReadMemory(memory) {
                 if(!this.isLogined) {
-                    this.$router.push({name:"memoryinfo", params:memory});
+                    var {href} = this.$router.resolve({name:"indexmemoryinfo", query:memory});
+                    window.open(href,'_blank')
                     return;
                 }
                 this.$apollo.mutate({

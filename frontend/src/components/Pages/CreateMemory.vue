@@ -85,11 +85,12 @@
 <script>
     import {library} from '@fortawesome/fontawesome-svg-core';
     import {faChevronLeft, faPaperPlane, faPlusCircle, faTimes} from '@fortawesome/free-solid-svg-icons';
+    import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
     import CreateMemory from '../../graphql/CreateMemory/CreateMemory.graphql';
     import RefershToken from '../../graphql/RefreshToken.graphql';
     import error from '../../utils/error';
 
-    library.add(faPlusCircle, faChevronLeft, faTimes, faPaperPlane);
+    library.add(faEye, faEyeSlash, faPlusCircle, faChevronLeft, faTimes, faPaperPlane);
 
     export default {
         name: 'CreateMemory',
@@ -267,7 +268,7 @@
                     headers: {'Content-Type': 'multipart/form-data'}
                 };
                 const that = this;
-                this.$axios.post('/api/img/save/', data, config)
+                this.$axios.post('/img/save/', data, config)
                     .then(response => {
                         console.log(response.data);
                         that.uploadAudio(memoryId, that.createMemoryForm.audio);
@@ -285,7 +286,7 @@
                 const config = {
                     headers: {'Content-Type': 'multipart/form-data'}
                 };
-                this.$axios.post('/api/img/save/', data, config)
+                this.$axios.post('/img/save/', data, config)
                     .then(response => {
                         console.log(response.data);
                         alert("Published successfully!")

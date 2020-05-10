@@ -1,5 +1,5 @@
 mutation GetMyMemory($name:String!) {
-    getAllMemory(creatorUsername:$name){
+    getAllMemory(creatorUsername:$name, aliveOnly:true){
         success
         memorys {
             id

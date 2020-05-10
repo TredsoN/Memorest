@@ -2,11 +2,11 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './utils/router.js'
 import apolloProvider from './utils/apolloClient.js'
+import axios from './utils/axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import vuescroll from 'vuescroll';
-import axios from 'axios'
 
 Vue.use(vuescroll);
 

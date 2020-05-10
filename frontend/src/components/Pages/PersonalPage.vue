@@ -23,9 +23,7 @@
                 </router-link>
             </div>
             <div style="margin-top:10px;text-align:center">
-                <router-link :to="{ name: 'index' }">
-                    <el-button class="button-common" style="font-size: 24px" @click="logout">LOG OUT</el-button>
-                </router-link>
+                <el-button class="button-common" style="font-size: 24px" @click="logout">LOG OUT</el-button>
             </div>
         </div>
     </div>
@@ -55,6 +53,7 @@ export default {
             if(confirm('Confirm to log out?')==true){
                 localStorage.removeItem('user');
                 localStorage.removeItem('token');
+                this.$router.push({name:'index'});
             }
         }
     }

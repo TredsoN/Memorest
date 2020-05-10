@@ -2,17 +2,17 @@
     <div class="background3">
         <div class="page-panel" :style="{left: (screenWidth-700)/2+'px'}">
             <div style="height:50px">
-                <label class="title">MY MEMORIES</label>
+                <label class="title" style="color:rgb(190,190,190)">FORGOTTEN MEMORIES</label>
             </div>
-            <hr class="title"/>
+            <hr class="title" style="color:rgb(190,190,190)"/>
             <div :style="{width:700+'px',height:screenHeight-150+'px'}">
                 <vue-scroll :ops="scrollsetting">
                     <div @click="ReadMemory(item)" v-for="(item) in memories" :key="item.id" class="memorytile">
                         <div class="label-div">
-                            <label class="label-with-pointer" :style="{color:item.subject==''?'#ffff00':'#00aaff'}">{{item.title}}</label>
+                            <label class="label-with-pointer" style="color:rgb(190,190,190)">{{item.title}}</label>
                         </div>
                         <div class="label-div">
-                            <label class="label-with-pointer" :style="{color:item.subject==''?'#ffff00':'#00aaff'}">{{item.createTime}}</label>
+                            <label class="label-with-pointer" style="color:rgb(190,190,190">{{item.createTime}}</label>
                         </div>
                     </div>
                     <div style="height:50px"/>
@@ -34,7 +34,7 @@ export default {
             },
             bar:{
                 opacity:0.5,
-                background:'yellow'
+                background:'gray'
             }
         }
         return {

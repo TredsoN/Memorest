@@ -1,4 +1,5 @@
 module.exports = {
+    publicPath: "./",
     // webpack 链接 API，用于生成和修改 webapck 配置
     // https://github.com/mozilla-neutrino/webpack-chain
     chainWebpack: (config) => {
@@ -11,13 +12,13 @@ module.exports = {
             .end()
     },
     devServer : {
-        port: 8080,
+        port: 8086,
         proxy : {
             '/api': {
                 target: 'http://106.13.41.151',
                 changeOrigin: true,
-                pathRewrite:{
-                    '^/api':''
+                pathRewrite: {
+                    '^/api': ''  
                 }
             }
         }

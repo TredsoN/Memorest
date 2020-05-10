@@ -6,12 +6,12 @@
             </el-button>
         </router-link>
 
-        <div class="with-shadow2" :style="{top:(screenHeight-600)/2+'px',left:(screenWidth-1200)/2+'px'}">
-            <div style="position:absolute;width:1100px;height:50px;color:rgb(225,225,225);text-align:left;font-size:24px;top:20px;left:50px">
+        <div class="with-shadow2" :style="{width:screenWidth*0.9+'px',height:screenHeight*0.9+'px',top:screenHeight*0.05+20+'px',left:screenWidth*0.05+'px'}">
+            <div style="position:absolute;height:50px;color:rgb(225,225,225);text-align:left;font-size:24px;top:20px;left:50px" :style="{width:screenWidth*0.9-100+'px'}">
                 <p>{{news.title}}</p>
             </div>
-            <hr size="2" color="#999" class="news-hr"/>
-            <div style="position:absolute;width:1100px;height:480px;color:rgb(225,225,225);text-align:left;font-size:16px;top:100px;left:50px">
+            <hr size="2" color="#999" class="news-hr" :style="{width:screenWidth*0.9-100+'px'}"/>
+            <div style="position:absolute;color:rgb(225,225,225);text-align:left;font-size:16px;top:100px;left:50px" :style="{width:screenWidth*0.9-100+'px',height:screenHeight*0.9-120+'px'}">
                 <vue-scroll :ops="scrollsetting">  
                     <div v-html="news.content"/>
                 </vue-scroll>
@@ -53,18 +53,14 @@
     }
 </script>
 
-
 <style>
     div.with-shadow2 {
         position:absolute;
-        width:1200px;
-        height:600px;
         background: rgba(0, 0, 0, 0.6);
         box-shadow: 5px 5px 25px rgba(234,182,15,0.5);
     }
     hr.news-hr {
         position:absolute;
-        width:1100px;
         top:80px;
         left: 50px;
         filter: alpha(opacity=100,finishopacity=0,style=3);
