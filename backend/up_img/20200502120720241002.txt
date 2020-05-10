@@ -1,0 +1,22 @@
+workon memorest
+cd /home/memorest/config
+uwsgi --reload uwsgi.pid
+
+cd /home/memorest/Memorest/backend
+redis-server --protected-mode no
+python manage.py celery -A backend worker -l info
+python manage.py celery beat
+
+https://blog.csdn.net/xiaoliyi185/article/details/90704812
+nohup python -u manage.py celery -A backend worker -l info >test.log 2>&1 &
+nohup python -u manage.py celery beat >test.log 2>&1 &
+jobs -l
+kill -9 ½ø³ÌºÅ
+
+
+python manage.py makemigrations
+python manage.py migrate
+
+
+pip freeze > requirements.txt
+pip install -r requirements.txt

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+
+<body>
+
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" id="file_img">
+        <input type="button" value="提交" id=btn>
+    </form>
+{#    <img src="/media/20200502123234873897.jpg" alt="">#}
+</body>
+
+<script>
+    // 向后端发送 ajax 请求
+    $("#btn").click(function(){
+        var form_data = new FormData;
+        form_data.append("files", $("#file_img")[0].files[0]);
+        form_data.append("memoryid", "5");
+        $.ajax({
+            url: "/img/save/",
+            method: "post",
+            contentType: false,        // 告诉jQuery不要去设置Content-Type请求头
+            processData: false,        // 告诉jQuery不要去处理发送的数据
+            data: form_data,
+            success: function(data){
+                alert("上传成功！");
+            }, error: function(data){
+                alert("上传失败！");
+            }
+        })
+    })
+
+</script>
+</html>
