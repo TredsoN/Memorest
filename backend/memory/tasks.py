@@ -1,10 +1,12 @@
 from __future__ import absolute_import, unicode_literals
 
+import os
 import time
 
 from celery import shared_task
 
-from memory.models import Memory
+from backend import settings
+from memory.models import Memory, Image, Music
 
 
 # @shared_task
@@ -34,3 +36,21 @@ def memoryLoss():
             aliveMemory.activity = 0
             aliveMemory.deathtime = 1
         aliveMemory.save()
+
+
+@shared_task
+def mediaClean():
+    images = Image.objects.all()
+    for image in images:
+        if Memory.objects.filter(id=image.memoryid).exists():
+            continue
+        if os.path.exists(os.path.join(settings.MEDIA_ROOT, 'image', str(image.image))):
+            os.remove(os.path.join(settings.MEDIA_ROOT, 'image', str(image.image)))
+        image.delete()
+    musics = Music.objects.all()
+    for music in musics:
+        if Memory.objects.filter(id=music.memoryid).exists():
+            continue
+        if os.path.exists(os.path.join(settings.MEDIA_ROOT, 'music', str(music.music))):
+            os.remove(os.path.join(settings.MEDIA_ROOT, 'music', str(music.music)))
+        music.delete()
