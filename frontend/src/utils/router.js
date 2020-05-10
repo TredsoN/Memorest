@@ -101,7 +101,7 @@ const router = new Router({
             name: 'myforgottenmemories',
             component: resolve=>(require(["../components/Pages/MyDeadMemoriesPage"],resolve)),
             meta: {
-                title: '我的记忆'
+                title: '遗忘记忆'
             }
         },
         {

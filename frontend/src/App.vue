@@ -204,6 +204,11 @@
         width: 100%;
         border: 1px solid rgb(234,213,15);
     }
+    hr.titledead {
+        top: 50px;
+        width: 100%;
+        border: 1px solid rgb(190,190,190);
+    }
     div.page-panel {
         position: absolute;
         top: 50px;
@@ -221,6 +226,18 @@
     div.memorytile:hover {
         height: 100px;
         border-bottom: 1px solid rgb(234,213,15);
+        cursor: pointer;
+    }
+    div.deadmemorytile {
+        text-align: center;
+        margin-left: 25px;
+        width: 650px;
+        height: 100px;
+        border-bottom: 1px solid rgb(110, 110, 110);
+    }
+    div.deadmemorytile:hover {
+        height: 100px;
+        border-bottom: 1px solid rgb(190,190,190);
         cursor: pointer;
     }
     div.label-div {

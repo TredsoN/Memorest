@@ -19,7 +19,13 @@
                 </div>
             </div>
         </transition>
-
+        
+        <div @click="GotoLogin" v-if="!isLogined" class="goto-main-box" style="top:5px;left:20px;text-align:left;font-size:18px">
+            <label class="goto-main-label">LOG IN</label>
+        </div>
+        <div @click="GotoPersonal" v-if="isLogined" class="goto-main-box" style="top:5px;left:20px;text-align:left;font-size:18px">
+            <label class="goto-main-label">MY FORGOTTEN MEMORIES</label>
+        </div>
         <router-link :to="{ name: 'newsintro' }" target="_blank">
             <div class="goto-main-box" style="top:5px;right:20px;text-align:right;font-size:18px">
                 <label class="goto-main-label">ABOUT ALZHEIMER </label>
@@ -51,7 +57,6 @@
             return {
                 showMemory: false,
                 isLogined: localStorage.getItem('token'),
-                username: localStorage.getItem('user')? JSON.parse(localStorage.getItem('user')).name : '',
                 memories: [],
                 screenWidth: document.documentElement.clientWidth,
                 screenHeight: document.documentElement.clientHeight,
@@ -86,6 +91,30 @@
                 })()
             }
         },
+        methods: {
+            GotoPersonal() {
+                if(localStorage.getItem('token')){
+                    const {href} = this.$router.resolve({ name: 'myforgottenmemories' });
+                    window.open(href,'_blank')
+                }
+                else{
+                    const {href} = this.$router.resolve({ name: 'login' });
+                    window.open(href,'_blank')
+                    this.reload();
+                }
+            },
+            GotoLogin() {
+                if(!localStorage.getItem('token')){
+                    const {href} = this.$router.resolve({ name: 'login' });
+                    window.open(href,'_blank')
+                }
+                else{
+                    const {href} = this.$router.resolve({ name: 'myforgottenmemories' });
+                    window.open(href,'_blank');
+                    this.reload();
+                }
+            },
+        }
     }
 </script>
 
