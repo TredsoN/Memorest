@@ -37,7 +37,7 @@
         </div>
         <div style="position:absolute;text-align:right;line-height:30px;font-size:22px" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.4)/2+'px',top:screenHeight*0.71+'px'}">
             <label class="text-button" @click="submit" style="color:#ffff00">publish </label>
-            <font-awesome-icon icon="paper-plane" style="color:#ffff00"/>
+            <font-awesome-icon icon="paper-plane" @click="submit" style="color:#ffff00"/>
         </div>
         <div style="position:absolute;text-align:left;line-height:30px;font-size:22px" :style="{width:screenHeight*0.5+'px',height:screenHeight*0.05+'px',left:(screenWidth-screenHeight*0.6)/2+'px',top:screenHeight*0.71+'px'}">
             <font-awesome-icon :icon="createMemoryForm.privacy ? ['far', 'eye-slash'] : ['far', 'eye']"
@@ -166,12 +166,14 @@
             },
             beforeUploadAudio(file) {
                 const fileType = file.name.split('.').pop();
-                if (['mp3', 'wav'].indexOf(fileType) !== -1) {
-                    return true;
-                } else {
+                if (['mp3', 'wav'].indexOf(fileType) === -1) {
                     alert(error.wrongAudio);
                     return false;
+                } else if (file.size / 1024 / 1024 > 10) {
+                    alert(error.tooLargeAudio);
+                    return false;
                 }
+                return true;
             },
             handlePictureExceed() {
                 alert(error.tooManyPictures);
