@@ -44,3 +44,32 @@ class Subject(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class News(models.Model):
+
+    title = models.CharField(max_length=256, verbose_name='咨讯标题')
+    summary = models.TextField(verbose_name='咨讯摘要')
+    content = models.TextField(verbose_name='咨讯内容')
+    author = models.CharField(max_length=256, verbose_name='咨讯作者')
+    origin = models.CharField(max_length=256, verbose_name='咨讯来源')
+    time = models.DateTimeField(verbose_name='咨讯时间')
+    createTime = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+
+    class Meta:
+        db_table = 'news'
+        verbose_name = '咨讯'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.title
+
+
+class Image(models.Model):
+    image = models.ImageField(verbose_name="图片", upload_to="image")
+    memoryid = models.IntegerField(verbose_name='记忆编号')
+
+
+class Music(models.Model):
+    music = models.FileField(verbose_name="音乐", upload_to="music")
+    memoryid = models.IntegerField(verbose_name='记忆编号')

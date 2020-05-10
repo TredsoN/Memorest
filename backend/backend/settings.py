@@ -75,7 +75,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -136,13 +136,16 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS=(
+    os.path.join(BASE_DIR, "static"),
+)
 STATIC_ROOT = '/home/memorest/static/'
 
 # Auth
@@ -195,6 +198,10 @@ DEFAULT_FROM_EMAIL = 'fforkboat@gmail.com'
 SITE_URL = '127.0.0.1:8000'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, "up_img")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace("\\", "/")
 
 # # 定时任务
 # CELERY_BEAT_SCHEDULE = {

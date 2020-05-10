@@ -1,11 +1,16 @@
+import os
+
 import graphene
 from django.db import transaction
+from django.db.models import Q
 from graphene_django import DjangoObjectType
 from graphene import ObjectType, String, Schema
 from graphql_auth.bases import Output
 from graphql_jwt.decorators import login_required
+from graphene_file_upload.scalars import Upload
 
-from memory.models import Memory, Subject
+from backend import settings
+from memory.models import Memory, Subject, News, Image, Music
 from user.models import User
 
 
@@ -17,6 +22,11 @@ class MemoryType(DjangoObjectType):
 class SubjectType(DjangoObjectType):
     class Meta:
         model = Subject
+
+
+class NewsType(DjangoObjectType):
+    class Meta:
+        model = News
 
 
 class MemoryQuery(graphene.ObjectType):
@@ -37,8 +47,8 @@ class MemoryInput(graphene.InputObjectType):
     audio = graphene.String(required=True)
     content = graphene.String(required=True)
     privacy = graphene.Int(required=True)
-    subjectId = graphene.Int()
-    subjectName = graphene.String()
+    subjectId = graphene.Int(default_value=0)
+    subjectName = graphene.String(default_value='')
 
 
 class CreateMemory(Output, graphene.Mutation):
@@ -60,15 +70,19 @@ class CreateMemory(Output, graphene.Mutation):
 
     返回值: \n
     success: 操作是否成功 \n
+    pid: 创建的记忆的id \n
+    errors: 失败原因 \n
 
     示例：\n
     mutation {
         createMemory(memoryData:{title:"memory1", creatorUsername:"李在学", picture:"",audio:"",content:"this is one memory", privacy:1, subjectId:3}){
         success
+        pid
       	errors
         }
     }
     """
+    pid = graphene.Int()
 
     class Arguments:
         memory_data = MemoryInput(required=True)
@@ -85,15 +99,15 @@ class CreateMemory(Output, graphene.Mutation):
             else:
                 memory.creatorId = User.objects.get(username=memory_data['creatorUsername']).id
                 memory.creatorUsername = memory_data['creatorUsername']
-            if memory_data['subjectId']:
+            if memory_data['subjectId'] != 0:
                 if Subject.objects.filter(id=memory_data['subjectId']).exists():
                     memory.subjectId=memory_data['subjectId']
                     memory.subjectName=Subject.objects.get(id=memory_data['subjectId']).name
                 else:
                     return CreateMemory(success=False, errors={"subjectId": "该subject不存在"})
-            elif memory_data['subjectName']:
+            elif memory_data['subjectName'] != '':
                 if Subject.objects.filter(name=memory_data['subjectName']).exists():
-                    memory.subjectId=Subject.objects.get(id=memory_data['subjectName']).id
+                    memory.subjectId=Subject.objects.get(name=memory_data['subjectName']).id
                     memory.subjectName=memory_data['subjectName']
                 else:
                     return CreateMemory(success=False, errors={"subjectName": "该subject不存在"})
@@ -102,7 +116,7 @@ class CreateMemory(Output, graphene.Mutation):
             memory.content = memory_data['content']
             memory.privacy = memory_data['privacy']
             memory.save()
-            return CreateMemory(success=True)
+            return CreateMemory(success=True, pid=memory.id)
 
 
 class DeleteMemory(graphene.Mutation):
@@ -117,7 +131,7 @@ class DeleteMemory(graphene.Mutation):
 
     示例：\n
     mutation {
-        deleteMemory( memoryId:5){
+        deleteMemory( memoryId:4){
         success
         }
     }
@@ -129,25 +143,24 @@ class DeleteMemory(graphene.Mutation):
 
     def mutate(self, info, memoryId):
         with transaction.atomic():
-            memory = Memory.objects.get(id=memoryId)
-            Subject.objects.get(id=memory.subjectId).delete()
-            memory.delete()
+            Memory.objects.get(id=memoryId).delete()
             return DeleteMemory(success=True)
 
 
-class SearchMemory(graphene.Mutation):
+class SearchSubject(graphene.Mutation):
     """
-    搜索记忆
+    搜索主题
 
     参数: \n
     keyword!: 关键字 \n
 
     返回值: \n
+    subjects: 包含该关键字的所有主题 \n
     success: 操作是否成功 \n
 
     示例：\n
     mutation {
-        searchMemory( keyword:'memory'){
+        searchSubject( keyword:"一"){
         subjects{
           id,
           name,
@@ -165,7 +178,47 @@ class SearchMemory(graphene.Mutation):
 
     def mutate(self, info, keyword):
         subjects = Subject.objects.filter(name__icontains=keyword)
-        return SearchMemory(subjects=subjects, success=True)
+        return SearchSubject(subjects=subjects, success=True)
+
+
+class SearchMemory(graphene.Mutation):
+    """
+    搜索记忆
+
+    参数: \n
+    keyword!: 关键字 \n
+
+    返回值: \n
+    memorys: 标题或内容中包含该关键字的所有公开记忆 \n
+    success: 操作是否成功 \n
+
+    示例：\n
+        mutation {
+        searchMemory( keyword:"this"){
+        memorys{
+          id,
+          title,
+          picture,
+          audio,
+          content,
+          createTime,
+          privacy,
+          subjectId,
+          subjectName
+        },
+        success
+        }
+    }
+    """
+    success = graphene.Boolean()
+    memorys = graphene.List(MemoryType)
+
+    class Arguments:
+        keyword = graphene.String(required=True)
+
+    def mutate(self, info, keyword):
+        memorys = Memory.objects.filter(Q(title__icontains=keyword) | Q(content__icontains=keyword))
+        return SearchMemory(memorys=memorys, success=True)
 
 
 class GetAllMemory(graphene.Mutation):
@@ -430,13 +483,67 @@ class SetMemoryDensity(graphene.Mutation):
             return SetMemoryDensity(success=True)
 
 
+
+class GetAllNews(graphene.Mutation):
+    """
+    获取所有资讯 \n
+
+    返回值: \n
+    news: 所有资讯 \n
+    success: 操作是否成功 \n
+
+    示例：\n
+    mutation{
+      getAllNews{
+          news{
+              id,
+              title,
+              summary,
+              content,
+              author,
+              origin,
+              time,
+              createTime,
+            },
+        success
+      }
+    }
+    """
+    success = graphene.Boolean()
+    news = graphene.List(NewsType)
+
+    # class Arguments:
+
+    def mutate(self, info):
+        newss = News.objects.all().order_by("time")
+        return GetAllNews(news=newss, success=True)
+# class UploadFile(graphene.Mutation):
+#
+#     success = graphene.Boolean()
+#
+#     class Arguments:
+#         file = Upload(required=True)
+#
+#     def mutate(self, info, file):
+#         for line in file:
+#             print(line)
+#         return UploadFile(success=True)
+
+
+
+
+
 class MemoryMutation(graphene.ObjectType):
     create_memory = CreateMemory.Field()
     delete_memory = DeleteMemory.Field()
     get_all_memory = GetAllMemory.Field()
+    search_subject = SearchSubject.Field()
     search_memory = SearchMemory.Field()
     read_one_memory = ReadOneMemory.Field()
     get_random_dead_memory = GetRandomDeadMemory.Field()
     get_random_alive_memory = GetRandomAliveMemory.Field()
     # set_memory_owner = SetMemoryOwner.Field()
     set_memory_density = SetMemoryDensity.Field()
+    get_all_news = GetAllNews.Field()
+    # upload_file = UploadFile.Field()
+
