@@ -37,8 +37,7 @@ class VerificationCode(models.Model):
         if item is None:
             item = VerificationCode(email=email)
         else:
-            time_diff = datetime.datetime.now(
-                tz=datetime.timezone(datetime.timedelta(hours=8), 'Asia/Shanghai')) - item.last_updated
+            time_diff = datetime.datetime.now() - item.last_updated
 
             if time_diff.total_seconds() < 60 and item.is_last_mail_successful:
                 return False, "一分钟之内只能发送一条验证码"
