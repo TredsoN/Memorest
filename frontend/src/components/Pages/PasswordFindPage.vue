@@ -26,7 +26,7 @@
                                 style="width:100px;font-size:16px"
                                 :type="getCodeBtnEnabled ? 'primary' : 'info'"
                                 :disabled="!getCodeBtnEnabled"
-                                @click="getcode">
+                                @click="getCode">
                             {{ getCodeBtnEnabled ? 'get code' : 'retry (' + emailForm.count + 's)'}}
                         </el-button>
                     </el-form-item>
@@ -64,7 +64,7 @@
 import GenerateVerificationCode from '../../graphql/SignInOrUp/GenerateVerificationCode.graphql'
 import PasswordReset from '../../graphql/UserInfoPages/PasswordReset.graphql'
 import validator from '../../utils/validator'
-import error from '../../utils/error'
+import errorNote from '../../utils/error'
 
 
 const waitTime = 60;
@@ -78,7 +78,7 @@ export default {
                 callback(new Error());
             }
             if (this.pswdForm.pswd2 !== '') {
-                this.$refs.signUpForm.validateField();
+                this.$refs.pswdForm.validateField();
             }
             callback();
         };
@@ -102,12 +102,12 @@ export default {
                 email: [
                     {
                         required: true,
-                        message: error.emptyEmail,
+                        message: errorNote.emptyEmail,
                         trigger: 'blur'
                     },
                     {
                         type: 'email',
-                        message: error.incorrectEmail,
+                        message: errorNote.incorrectEmail,
                         trigger: ['blur', 'change']
                     }
                 ]
@@ -116,36 +116,36 @@ export default {
                 code: [
                     {
                         required: true,
-                        message: error.emptyCode,
+                        message: errorNote.emptyCode,
                         trigger: 'blur'
                     },
                     {
                         validator: validator.code,
-                        message: error.incorrectCode,
+                        message: errorNote.incorrectCode,
                         trigger: ['blur', 'change']
                     }
                 ],
                 pswd1: [
                     {
                         required: true,
-                        message: error.emptyPassword,
+                        message: errorNote.emptyPassword,
                         trigger: 'blur'
                     },
                     {
                         validator: validatePassword,
-                        message: error.incorrectPassword,
+                        message: errorNote.incorrectPassword,
                         trigger: ['blur', 'change']
                     }
                 ],
                 pswd2: [
                     {
                         required: true,
-                        message: error.emptyCheckPassword,
+                        message: errorNote.emptyCheckPassword,
                         trigger: 'blur'
                     },
                     {
                         validator: validateCheckPassword,
-                        message: error.incorrectCheckPassword,
+                        message: errorNote.incorrectCheckPassword,
                         trigger: ['blur', 'change']
                     }
                 ]
@@ -178,37 +178,30 @@ export default {
                 setTimeout(this.setTime, 1000);
             }
         },
-        getcode() {
-            this.$refs['emailForm'].validate((valid)=>{
-                if(!valid){
-                    return;
+        getCode() {
+            this.$apollo.mutate({
+                mutation: GenerateVerificationCode,
+                variables: {
+                    email: this.emailForm.email
                 }
-                this.$apollo.mutate({
-                    mutation: GenerateVerificationCode,
-                    variables: {
-                        email: this.emailForm.email,
-                    },
-                }).then(data=>{
-                    console.log(data);
-                    if(data.data.generateVerificationCode.success){
-                        alert('发送成功');
-                        this.setTime();
-                    }
-                    else{
-                        alert('发送失败');
-                        console.log(data.data.generateVerificationCode);
-                    }
-                }).catch(error=>{
-                    alert(error);
-                });
+            }).then(data => {
+                let result = data.data.generateVerificationCode;
+                if (!result.success) {
+                    alert(JSON.stringify(result.errors));
+                } else {
+                    this.setTime();
+                }
+            }).catch(error => {
+                console.log(error);
+                alert(errorNote.netWorkError);
             });
         },
         submit() {
-            this.$refs['pswdForm'].validate((valid)=>{
+            this.$refs.pswdForm.validate((valid)=>{
                 if(!valid){
                     return;
                 }
-                this.$refs['emailForm'].validate((valid)=>{
+                this.$refs.emailForm.validate((valid)=>{
                     if(!valid){
                         return;
                     }
@@ -220,16 +213,16 @@ export default {
                             pswd: this.pswdForm.pswd1
                         },
                     }).then(data=>{
-                        console.log(data);
                         if(data.data.passwordReset.success){
-                            alert('修改成功');
+                            alert('Updated successfully!');
                             this.$router.push({name: 'index'});
                         }
                         else{
                             alert(data.data.passwordReset.errors.code);
                         }
                     }).catch(error=>{
-                        alert(error);
+                        console.log(error);
+                        alert(errorNote.netWorkError);
                     });
                 });
             });

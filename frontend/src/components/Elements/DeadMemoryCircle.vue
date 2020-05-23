@@ -5,8 +5,8 @@
                 <defs>
                     <radialGradient :id="radialGradientId">
                         <stop offset="0%" stop-color="rgb(190,190,190)"/>
-                        <stop offset="90%" stop-color="rgb(190,190,190)"/>
-                        <stop offset="91%" stop-color="rgb(110,110,110)"/>
+                        <stop offset="80%" stop-color="rgb(190,190,190)"/>
+                        <stop offset="81%" stop-color="rgb(110,110,110)"/>
                         <stop offset="100%" stop-color="#000000"/>
                     </radialGradient>
                 </defs>
@@ -15,7 +15,7 @@
                 </mask>
             </defs>
             <rect width="100%" height="100%" fill="rgb(110,110,110)" :mask="mask" />
-            <text x="50%" y="50%" fill="rgb(225,225,225)" style="fontSize:24px">{{ title }}</text>
+            <text x="50%" y="50%" fill="rgb(225,225,225)" :style="{fontSize:contentFontSize+'px'}">{{ title }}</text>
         </svg>
     </div>
 </template>
@@ -32,11 +32,16 @@
             displayId: Number
         },
         computed: {
-            randsize() {
-                return 15+Math.random()*10;
-            },
             randbigsize() {
                 return 200+Math.random()*50;
+            },
+            contentFontSize() {
+                if(this.title.length<=6)
+                    return 24;
+                else if(this.title.length<=10)
+                    return 20;
+                else
+                    return 16;
             },
             radialGradientId() {
                 return `radial-gradient-${this.displayId}`

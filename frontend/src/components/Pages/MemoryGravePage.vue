@@ -1,8 +1,8 @@
 <template>
     <div class="background4">
-        <div v-if="!showMemory" class="goto-main-box" style="text-align:center;height:80px;width:600px;position:absolute;font-size:28px;" :style="{top:(screenHeight-80)/2+'px',left:(screenWidth-600)/2+'px'}" @click="showMemory = true">
+        <div v-if="!showMemory" class="goto-main-box" style="text-align:center;height:80px;width:800px;position:absolute;font-size:28px;" :style="{top:(screenHeight-80)/2+'px',left:(screenWidth-800)/2+'px'}" @click="showMemory = true">
             <label class="goto-main-label">
-                过去都是假的，回忆是一条没有归途的路
+                The past is all false, memory is a road without return.
             </label>
         </div>
 
@@ -45,7 +45,8 @@
     import GetRandomDeadMemory from '../../graphql/Index/GetRandomDeadMemory.graphql';
     import { library } from '@fortawesome/fontawesome-svg-core';
     import { faPlusCircle, faChevronRight, faCommentDots} from '@fortawesome/free-solid-svg-icons';
-    import MemoryCircle from '../Memory/DeadMemoryCircle.vue'
+    import MemoryCircle from '../Elements/DeadMemoryCircle.vue'
+    import errorNote from '../../utils/error'
 
     library.add(faPlusCircle, faChevronRight, faCommentDots);
 
@@ -61,9 +62,8 @@
                 screenWidth: document.documentElement.clientWidth,
                 screenHeight: document.documentElement.clientHeight,
                 positionsRand:[
-                    [0.45,0.32],[0.35,0.75],[0.31,0.92],[0.68,0.88],[0.75,0.06],
-                    [0.88,0.45],[0.98,1],[0,0],[0,1],[0.04,0.52],
-                    [1,0.23],[0.49,0.16],[0.89,0.65],[0.41,0.55],[1,0.79],
+                    [0.68,0.88],[0.41,0.55],[0,0],[0.75,0.06],[0,1],
+                    [0.88,0.45],[0.31,0.92],[0.49,0.16],[1,0.23],[0.89,0.65],
                 ]
             }
         },
@@ -72,7 +72,6 @@
                 mutation: GetRandomDeadMemory
             }).then(data => {
                 let result = data.data.getRandomDeadMemory;
-                console.log(result);
                 if (!result.success) {
                     alert(JSON.stringify(result.errors));
                 } else {
@@ -81,6 +80,7 @@
                 }
             }).catch(error => {
                 console.log(error);
+                alert(errorNote.netWorkError);
             });
             window.onresize = () => {
                 return (() => {
@@ -141,11 +141,5 @@
     }
     .goto-main-label:hover {
         cursor: pointer;
-    }
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity 2s
-    }
-    .fade-enter, .fade-leave-to {
-        opacity: 0
     }
 </style>

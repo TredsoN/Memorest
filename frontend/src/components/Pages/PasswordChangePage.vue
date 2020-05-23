@@ -43,7 +43,7 @@
 import RefershToken from '../../graphql/RefreshToken.graphql'
 import UpdatePassword from '../../graphql/UserInfoPages/PasswordChange.graphql'
 import validator from '../../utils/validator'
-import error from '../../utils/error'
+import errorNote from '../../utils/error'
 
 
 export default {
@@ -74,36 +74,36 @@ export default {
                 oldpswd:[
                     {
                         required: true,
-                        message: error.emptyOldPassword,
+                        message: errorNote.emptyOldPassword,
                         trigger: 'blur'
                     },
                     {
                         validator: validator.password,
-                        message: error.incorrectPassword,
+                        message: errorNote.incorrectPassword,
                         trigger: ['blur', 'change']
                     }
                 ],
                 newpswd1:[
                     {
                         required: true,
-                        message: error.emptyNewPassword,
+                        message: errorNote.emptyNewPassword,
                         trigger: 'blur'
                     },
                     {
                         validator: validatePassword,
-                        message: error.incorrectPassword,
+                        message: errorNote.incorrectPassword,
                         trigger: ['blur', 'change']
                     }
                 ],
                 newpswd2:[
                     {
                         required: true,
-                        message: error.emptyCheckNewPassword,
+                        message: errorNote.emptyCheckNewPassword,
                         trigger: 'blur'
                     },
                     {
                         validator: validateCheckPassword,
-                        message: error.incorrectCheckNewPassword,
+                        message: errorNote.incorrectCheckNewPassword,
                         trigger: ['blur', 'change']
                     }
                 ],
@@ -130,12 +130,20 @@ export default {
                     rtoken: localStorage.getItem('refreshToken')
                 },
             }).then(data=>{
-                console.log(data);
                 if(data.data.refreshToken.success){
                     localStorage.setItem('token', data.data.refreshToken.token);
                     localStorage.setItem('refreshToken', data.data.refreshToken.refreshToken);
+                    this.updatepassword();
+                }
+                else {
+                    alert(errorNote.validateExpired);
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('refreshToken');
+                    this.$router.push({name:'index'});
                 }
             }).catch(error=>{
+                alert(errorNote.netWorkError);
                 console.log(error);
             });
         },
@@ -148,9 +156,8 @@ export default {
                 },
                 client: 'withtoken'
             }).then(data=>{
-                console.log(data);
                 if(data.data.passwordChange.success){
-                    alert('修改成功');
+                    alert('Updated Successfully!');
                     localStorage.setItem('token', data.data.passwordChange.token);
                     localStorage.setItem('refreshToken', data.data.passwordChange.refreshToken);
                     this.$router.push({name: 'personal'});
@@ -159,7 +166,8 @@ export default {
                     alert(data.data.passwordChange.errors.code);
                 }
             }).catch(error=>{
-                alert(error);
+                alert(errorNote.netWorkError);
+                console.log(error);
             });
         },
         submit() {
@@ -168,7 +176,6 @@ export default {
                     return;
                 }
                 this.refreshToken();
-                this.updatepassword();
             });
         }
     }

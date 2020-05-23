@@ -10,8 +10,8 @@
             <defs>
                 <defs>
                     <radialGradient :id="radialGradientId">
-                        <stop offset="0%" :stop-color="innerColor"/>
-                        <stop offset="90%" :stop-color="innerColor"/>
+                        <stop offset="0%" stop-color="#000000"/>
+                        <stop offset="90%" stop-color="#000000"/>
                         <stop offset="91%" :stop-color="outterColor"/>
                         <stop offset="100%" stop-color="#000000"/>
                     </radialGradient>
@@ -109,11 +109,6 @@ export default {
             const audios = this.memory.audio.split(',');
             return audios[audios.length - 2];
         },
-        innerColor() {
-            if(this.memory.subject == "")
-                return 'rgba(255, 255, 0, 0.2)';
-            return 'rgba(0, 170, 255, 0.2)';
-        },
         outterColor() {
             if(this.memory.subject == "")
                 return '#ffff00';
@@ -158,7 +153,6 @@ export default {
                     privacy: this.memory.privacy?0:1
                 },
             }).then(data=>{
-                console.log(data);
                 if(data.data.setMemoryDensity.success){
                     this.memory.privacy = !this.memory.privacy;
                 }
@@ -174,7 +168,6 @@ export default {
                         memoryId: this.memory.id,
                     },
                 }).then(data=>{
-                    console.log(data);
                     if(data.data.deleteMemory.success){
                         this.$router.go(-1)
                     }

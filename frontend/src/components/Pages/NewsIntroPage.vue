@@ -3,14 +3,14 @@
         <router-link :to="{ name: 'newsindex' }">
             <div class="with-shadow" :style="{top:(screenHeight-300)/2+'px',left:(screenWidth-800)/2+'px'}">
                 <div style="position:absolute;width:700px;height:150px;color:rgb(225,225,225);text-align:left;font-size:24px;top:20px;left:50px">
-                    <p>阿尔兹海默症就像是在公园散步。</p>
-                    <p>只是患上阿尔兹海默症后，我的公园总在变。</p>
+                    <p>Alzheimer's is like walking in a park.</p>
+                    <p>It's just that after Alzheimer's, my park is always changing.</p>
                 </div>
                 <div style="position:absolute;width:700px;height:100px;color:rgb(225,225,225);text-align:left;font-size:18px;top:170px;left:50px">
-                    <p>——《选择死亡》</p>
+                    <p>—— Terry Pratchett：Choosing to Die</p>
                 </div>
                 <div style="position:absolute;color:rgb(234,213,15);text-align:left;font-size:18px;bottom:20px;right:50px">
-                    <label class="goto-grave-label">了解更多 </label>
+                    <label class="goto-grave-label">Learn More </label>
                     <font-awesome-icon icon="chevron-right"/>
                 </div>
             </div>
@@ -54,6 +54,6 @@
     }
     div.with-shadow:hover {
         cursor: pointer;
-        box-shadow: 15px 15px 30px rgb(234,213,15);
+        box-shadow: 10px 10px 30px rgb(234,213,15);
     }
 </style>

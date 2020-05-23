@@ -49,7 +49,6 @@
             this.$apollo.mutate({
                 mutation: GetAllNews
             }).then(data => {
-                console.log(data);
                 let result = data.data.getAllNews;
                 if (!result.success) {
                     alert(JSON.stringify(result.errors));
@@ -66,6 +65,7 @@
                     this.news = result_news.reverse();
                 }
             }).catch(error => {
+                alert('The network is not in good condition. Please try again later.');
                 console.log(error);
             });
             window.onresize = () => {

@@ -1,5 +1,5 @@
 mutation GetRandomAliveMemory {
-    getRandomDeadMemory {
+    getRandomDeadMemory(number:10) {
         success,
         memorys {
             title

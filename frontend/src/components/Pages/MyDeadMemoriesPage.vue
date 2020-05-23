@@ -50,7 +50,6 @@ export default {
                 name: JSON.parse(localStorage.getItem('user')).name
             }
         }).then(data => {
-            console.log(data.data);
             let result = data.data.getAllMemory;
             if (!result.success) {
                 alert(JSON.stringify(result.errors));
@@ -67,6 +66,7 @@ export default {
                 this.memories = result_memories;
             }
         }).catch(error => {
+            alert('The network is not in good condition. Please try again later.');
             console.log(error);
         });
         window.onresize = () => {

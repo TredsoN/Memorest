@@ -143,23 +143,23 @@
         border-color: transparent;
     }
     button.button-back:focus {
-        color: rgb(234,213,15);
+        color: rgb(155,133,21);
         background-color: transparent;
         border-color: transparent;
     }
     button.button-common {
         outline: none;
-        color: rgb(234,213,15);
-        background-color: transparent;
-        border-color: transparent;
-    }
-    button.button-common:hover {
         color: rgb(234,182,15);
         background-color: transparent;
         border-color: transparent;
     }
-    button.button-common:focus {
+    button.button-common:hover {
         color: rgb(234,213,15);
+        background-color: transparent;
+        border-color: transparent;
+    }
+    button.button-common:focus {
+        color: rgb(234,182,15);
         background-color: transparent;
         border-color: transparent;
     }
@@ -167,27 +167,27 @@
         font-style: normal;
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         font-size: 24px;
-        color: rgb(234,213,15);
+        color: rgb(234,182,15);
     }
     label.title {
         font-style: normal;
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         font-size: 32px;
-        color: rgb(234,213,15);
+        color: rgb(234,182,15);
     }
     label.content-title {
         line-height: 50px;
         font-style: normal;
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         font-size: 24px;
-        color: rgb(234,213,15);
+        color: rgb(234,182,15);
     }
     label.content-info {
         line-height: 50px;
         font-style: normal;
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         font-size: 24px;
-        color: rgb(234,182,15);
+        color: rgb(234,213,15);
     }
     label.text-button {
         line-height: 50px;
@@ -202,7 +202,7 @@
     hr.title {
         top: 50px;
         width: 100%;
-        border: 1px solid rgb(234,213,15);
+        border: 1px solid rgb(234,182,15);
     }
     hr.titledead {
         top: 50px;
@@ -257,5 +257,11 @@
     }
     label.label-with-pointer:hover {
         cursor: pointer;
+    }
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity 2s
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0
     }
 </style>

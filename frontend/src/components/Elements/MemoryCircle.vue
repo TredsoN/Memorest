@@ -5,7 +5,7 @@
                 <defs>
                     <radialGradient :id="radialGradientId">
                         <stop offset="0%" :stop-color="exactColor"/>
-                        <stop offset="40%" :stop-color="exactColor"/>
+                        <stop offset="30%" :stop-color="exactColor"/>
                         <stop offset="100%" stop-color="#000000"/>
                     </radialGradient>
                 </defs>
@@ -30,7 +30,7 @@
                 </mask>
             </defs>
             <rect width="100%" height="100%" :fill="fillColor" :mask="mask" />
-            <text x="50%" y="50%" :fill="exactColor" style="fontSize:24px">{{ title }}</text>
+            <text x="50%" y="50%" :fill="exactColor" :style="{fontSize:contentFontSize+'px'}">{{ title }}</text>
         </svg>
     </div>
 </template>
@@ -51,7 +51,7 @@
         },
         computed: {
             randsize() {
-                return 15+Math.random()*10;
+                return 5+this.opacity*20;
             },
             randbigsize() {
                 return 200+Math.random()*50;
@@ -65,6 +65,14 @@
                 if (this.subject == "") 
                     return 'rgba(255, 255, 0, 0.2)';
                 return 'rgba(0, 170, 255, 0.2)';
+            },
+            contentFontSize() {
+                if(this.title.length<=6)
+                    return 24;
+                else if(this.title.length<=10)
+                    return 20;
+                else
+                    return 16;
             },
             fillColor() {
                 if (this.subject == "")

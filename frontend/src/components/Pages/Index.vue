@@ -2,7 +2,7 @@
     <div class="index">
         <div v-if="!showMemory" class="goto-grave-box" style="text-align:center;height:80px;width:600px;position:absolute;font-size:28px;" :style="{top:(screenHeight-80)/2+'px',left:(screenWidth-600)/2+'px'}" @click="showMemory = true">
             <label class="goto-grave-label">
-                如果记忆是一个罐头，我希望它永远不会过期
+                If memory is a can, I hope it never expires.
             </label>
         </div>
         
@@ -17,7 +17,7 @@
                     <memory-circle
                         :title="item.title"
                         :subject="item.subject"
-                        :opacity="item.activity/100"
+                        :opacity="0.5+item.activity/200"
                         :display-id="index"/>
                 </div>
             </div>
@@ -55,7 +55,8 @@
     import ReadMemory from '../../graphql/MemoryPages/ReadMemory.graphql'
     import { library } from '@fortawesome/fontawesome-svg-core';
     import { faPlusCircle, faChevronLeft, faCommentDots, faRandom } from '@fortawesome/free-solid-svg-icons';
-    import MemoryCircle from '../Memory/MemoryCircle'
+    import MemoryCircle from '../Elements/MemoryCircle'
+    import errorNote from '../../utils/error'
 
     library.add(faPlusCircle, faChevronLeft, faCommentDots, faRandom);
 
@@ -74,8 +75,8 @@
                 screenWidth: document.documentElement.clientWidth,
                 screenHeight: document.documentElement.clientHeight,
                 positionsRand:[
-                    [0.98,1],[0.41,0.55],[0.45,0.32],[0.31,0.92],[0.75,0.06],
-                    [0.88,0.45],[0.68,0.88],[0.35,0.75],[0,1],[0.04,0.52],
+                    [0.68,0.88],[0.41,0.55],[0.75,0.06],[0,1],[0.35,0.75],
+                    [0.88,0.45],[0.31,0.92],[0.98,1],[0.45,0.32],[0.04,0.52],
                     [1,0.23],[0.49,0.16],[0.89,0.65],[0,0],[1,0.79],
                 ]
             }
@@ -85,7 +86,6 @@
                 mutation: GetRandomAliveMemory
             }).then(data => {
                 let result = data.data.getRandomAliveMemory;
-                console.log(result);
                 if (!result.success) {
                     alert(JSON.stringify(result.errors));
                 } else {
@@ -110,6 +110,7 @@
                 }
             }).catch(error => {
                 console.log(error);
+                alert(errorNote.netWorkError);
             });
             window.onresize = () => {
                 return (() => {
@@ -134,12 +135,14 @@
                         isOwner: memory.creatorUsername == JSON.parse(localStorage.getItem('user')).name?true:false
                     },
                 }).then(data=>{
-                    console.log(data);
                     if(data.data.readOneMemory.success){
                         var {href} = this.$router.resolve({name:"indexmemoryinfo", query:memory});
                         window.open(href,'_blank')
                     }
+                    else
+                        alert(errorNote.netWorkError);
                 }).catch(error=>{
+                    alert(errorNote.netWorkError);
                     console.log(error);
                 });
             },

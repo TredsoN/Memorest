@@ -22,7 +22,7 @@
             :rules="createMemoryRules"
             ref="createMemoryForm">
             <el-form-item prop="title" style="position:absolute;text-align:center;height:50px" :style="{width:screenHeight*0.6+'px', left:(screenWidth-screenHeight*0.6)/2+'px',top:screenHeight*0.25+'px'}">
-                <el-input style="width:height:150px;" v-model="createMemoryForm.title" maxlength="8"></el-input>
+                <el-input style="width:height:150px;" v-model="createMemoryForm.title" maxlength="12"></el-input>
             </el-form-item>
             <el-form-item prop="content" style="position:absolute;text-align:center" :style="{width:screenHeight*0.6+'px', left:(screenWidth-screenHeight*0.6)/2+'px',top:screenHeight*0.35+'px'}">
                 <el-input
@@ -88,7 +88,7 @@
     import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
     import CreateMemory from '../../graphql/CreateMemory/CreateMemory.graphql';
     import RefershToken from '../../graphql/RefreshToken.graphql';
-    import error from '../../utils/error';
+    import errorNote from '../../utils/error';
 
     library.add(faEye, faEyeSlash, faPlusCircle, faChevronLeft, faTimes, faPaperPlane);
 
@@ -111,14 +111,14 @@
                     title: [
                         {
                             required: true,
-                            message: error.emptyTitle,
+                            message: errorNote.emptyTitle,
                             trigger: 'blur'
                         }
                     ],
                     content: [
                         {
                             required: true,
-                            message: error.emptyContent,
+                            message: errorNote.emptyContent,
                             trigger: 'blur'
                         }
                     ]
@@ -161,26 +161,26 @@
                 if (['jpg', 'png', 'gif'].indexOf(fileType) !== -1) {
                     return true;
                 } else {
-                    alert(error.wrongPicture);
+                    alert(errorNote.wrongPicture);
                     return false;
                 }
             },
             beforeUploadAudio(file) {
                 const fileType = file.name.split('.').pop();
                 if (['mp3', 'wav'].indexOf(fileType) === -1) {
-                    alert(error.wrongAudio);
+                    alert(errorNote.wrongAudio);
                     return false;
                 } else if (file.size / 1024 / 1024 > 10) {
-                    alert(error.tooLargeAudio);
+                    alert(errorNote.tooLargeAudio);
                     return false;
                 }
                 return true;
             },
             handlePictureExceed() {
-                alert(error.tooManyPictures);
+                alert(errorNote.tooManyPictures);
             },
             handleAudioExceed() {
-                alert(error.tooManyAudios);
+                alert(errorNote.tooManyAudios);
             },
             addPicture(param) {
                 this.createMemoryForm.picture = param.file;
@@ -203,14 +203,21 @@
                         rtoken: localStorage.getItem('refreshToken')
                     }
                 }).then(data => {
-                    console.log(data.data);
                     if (data.data.refreshToken.success) {
                         localStorage.setItem('token', data.data.refreshToken.token);
                         localStorage.setItem('refreshToken', data.data.refreshToken.refreshToken);
+                        this.createMemory();
                     }
-                    this.createMemory();
+                    else {
+                        alert(errorNote.validateExpired);
+                        localStorage.removeItem('user');
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('refreshToken');
+                        this.$router.push({name:'index'});
+                    }
                 }).catch(error => {
                     console.log(error);
+                    alert(errorNote.netWorkError);
                 });
             },
             createMemory() {
@@ -244,7 +251,6 @@
                     client: 'withtoken'
                 }).then(data => {
                     let result = data.data.createMemory;
-                    console.log(result);
                     if (!result.success) {
                         alert(JSON.stringify(result.errors));
                     } else {
@@ -253,7 +259,7 @@
                     }
                 }).catch(error => {
                     console.log(error);
-                    alert(JSON.stringify(error));
+                    alert(errorNote.netWorkError);
                 });
             },
             uploadPicture(memoryId, file) {

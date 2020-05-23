@@ -9,10 +9,10 @@
                 <vue-scroll :ops="scrollsetting">
                     <div @click="ReadMemory(item)" v-for="(item) in memories" :key="item.id" class="memorytile">
                         <div class="label-div">
-                            <label class="label-with-pointer" :style="{color:item.subject==''?'#ffff00':'#00aaff'}">{{item.title}}</label>
+                            <label class="label-with-pointer" :style="{color:item.subject==''?'rgb(255,255,0)':'rgb(0,170,255)'}">{{item.title}}</label>
                         </div>
                         <div class="label-div">
-                            <label class="label-with-pointer" :style="{color:item.subject==''?'#ffff00':'#00aaff'}">{{item.createTime}}</label>
+                            <label class="label-with-pointer" :style="{color:item.subject==''?'rgb(255,255,0)':'rgb(0,170,255)'}">{{item.createTime}}</label>
                         </div>
                     </div>
                     <div style="height:50px"/>
@@ -51,7 +51,6 @@ export default {
                 name: JSON.parse(localStorage.getItem('user')).name
             }
         }).then(data => {
-            console.log(data.data);
             let result = data.data.getAllMemory;
             if (!result.success) {
                 alert(JSON.stringify(result.errors));
@@ -77,6 +76,7 @@ export default {
                 this.memories = result_memories;
             }
         }).catch(error => {
+            alert('The network is not in good condition. Please try again later.');
             console.log(error);
         });
         window.onresize = () => {
@@ -87,11 +87,9 @@ export default {
                 this.screenWidth = window.screenWidth
             })()
         }
-
     },
     methods: {
         ReadMemory(memory) {
-            console.log(memory)
             this.$apollo.mutate({
                 mutation: ReadMemory,
                 variables: {
@@ -99,11 +97,11 @@ export default {
                     isOwner: memory.creatorUsername == JSON.parse(localStorage.getItem('user')).name?true:false
                 },
             }).then(data=>{
-                console.log(data);
                 if(data.data.readOneMemory.success){
                     this.$router.push({name:"memoryinfo", params:memory});
                 }
             }).catch(error=>{
+                alert('The network is not in good condition. Please try again later.');
                 console.log(error);
             });
         }

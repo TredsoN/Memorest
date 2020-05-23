@@ -40,7 +40,7 @@
 import RefershToken from '../../graphql/RefreshToken.graphql'
 import UpdateUsername from '../../graphql/UserInfoPages/InfoChange.graphql'
 import validator from '../../utils/validator'
-import error from '../../utils/error'
+import errorNote from '../../utils/error'
 
 
 export default {
@@ -55,12 +55,12 @@ export default {
                 username: [
                     {
                         required: true,
-                        message: error.emptyUsername,
+                        message: errorNote.emptyUsername,
                         trigger: 'blur'
                     },
                     {
                         validator: validator.username,
-                        message: error.incorrectUsername,
+                        message: errorNote.incorrectUsername,
                         trigger: ['blur', 'change']
                     }
                 ]
@@ -87,13 +87,21 @@ export default {
                     rtoken: localStorage.getItem('refreshToken')
                 },
             }).then(data=>{
-                console.log(data);
                 if(data.data.refreshToken.success){
                     localStorage.setItem('token', data.data.refreshToken.token);
                     localStorage.setItem('refreshToken', data.data.refreshToken.refreshToken);
+                    this.updateusername();
+                }
+                else {
+                    alert(errorNote.validateExpired);
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('refreshToken');
+                    this.$router.push({name:'index'});
                 }
             }).catch(error=>{
                 console.log(error);
+                alert(errorNote.netWorkError);
             });
         },
         updateusername() {
@@ -104,9 +112,8 @@ export default {
                 },
                 client: 'withtoken'
             }).then(data=>{
-                console.log(data);
                 if(data.data.updateUsername.success){
-                    alert('修改成功');
+                    alert('Updated successfully!');
                     var newuser = JSON.parse(localStorage.getItem('user'));
                     newuser.name = this.changeForm.username;
                     localStorage.setItem('user', JSON.stringify(newuser));
@@ -119,6 +126,7 @@ export default {
                 }
             }).catch(error=>{
                 console.log(error);
+                alert(errorNote.netWorkError);
             });
         },
         submit() {
@@ -127,7 +135,6 @@ export default {
                     return;
                 }
                 this.refreshToken();
-                this.updateusername();
             });
         }
     }

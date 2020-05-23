@@ -44,11 +44,11 @@ const error = {
     /** 后端请求响应错误（后端返回的错误以 r 开头，前端显示的错误以 m 开头） **/
 
     /* 注册 */
-    rIncorrectCode: '验证码错误',
+    rIncorrectCode: 'Wrong code.',
     mIncorrectCode: 'Your verification code is incorrect!',
-    rUsernameExist: '当前用户名已被使用',
+    rUsernameExist: 'The current user name is already in use.',
     mUsernameExist: 'This username has already been used!',
-    rEmailExist: '当前邮箱已经被使用',
+    rEmailExist: 'The current email address is already in use',
     mEmailExist: 'This mailbox has already been used!',
 
     /* 登录 */
@@ -56,6 +56,9 @@ const error = {
     mIncorrectUsernameOrPassword: 'Your username or password is incorrect!',
     mIncorrectEmailOrPassword: 'Your email or password is incorrect!',
 
+    /*网络错误*/
+    netWorkError: 'The network is not in good condition. Please try again later.',
+    validateExpired: 'The authentication information has expired. Please log in again'
 };
 
 

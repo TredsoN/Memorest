@@ -77,7 +77,7 @@
     import GenerateVerificationCode from '../../graphql/SignInOrUp/GenerateVerificationCode.graphql'
     import Register from '../../graphql/SignInOrUp/Register.graphql'
     import validator from '../../utils/validator'
-    import error from '../../utils/error'
+    import errorNote from '../../utils/error'
 
 
     const waitTime = 60;
@@ -120,24 +120,24 @@
                     usernameOrEmail: [
                         {
                             required: true,
-                            message: error.emptyUsernameOrEmail,
+                            message: errorNote.emptyUsernameOrEmail,
                             trigger: 'blur'
                         },
                         {
                             validator: validator.usernameOrEmail,
-                            message: error.incorrectUsernameOrEmail,
+                            message: errorNote.incorrectUsernameOrEmail,
                             trigger: ['blur', 'change']
                         }
                     ],
                     password: [
                         {
                             required: true,
-                            message: error.emptyPassword,
+                            message: errorNote.emptyPassword,
                             trigger: 'blur'
                         },
                         {
                             validator: validator.password,
-                            message: error.incorrectPassword,
+                            message: errorNote.incorrectPassword,
                             trigger: ['blur', 'change']
                         }
                     ]
@@ -146,60 +146,60 @@
                     email: [
                         {
                             required: true,
-                            message: error.emptyEmail,
+                            message: errorNote.emptyEmail,
                             trigger: 'blur'
                         },
                         {
                             type: 'email',
-                            message: error.incorrectEmail,
+                            message: errorNote.incorrectEmail,
                             trigger: ['blur', 'change']
                         }
                     ],
                     username: [
                         {
                             required: true,
-                            message: error.emptyUsername,
+                            message: errorNote.emptyUsername,
                             trigger: 'blur'
                         },
                         {
                             validator: validator.username,
-                            message: error.incorrectUsername,
+                            message: errorNote.incorrectUsername,
                             trigger: ['blur', 'change']
                         }
                     ],
                     password: [
                         {
                             required: true,
-                            message: error.emptyPassword,
+                            message: errorNote.emptyPassword,
                             trigger: 'blur'
                         },
                         {
                             validator: validateSignUpPassword,
-                            message: error.incorrectPassword,
+                            message: errorNote.incorrectPassword,
                             trigger: ['blur', 'change']
                         }
                     ],
                     checkPassword: [
                         {
                             required: true,
-                            message: error.emptyCheckPassword,
+                            message: errorNote.emptyCheckPassword,
                             trigger: 'blur'
                         },
                         {
                             validator: validateSignUpCheckPassword,
-                            message: error.incorrectCheckPassword,
+                            message: errorNote.incorrectCheckPassword,
                             trigger: ['blur', 'change']
                         }
                     ],
                     code: [
                         {
                             required: true,
-                            message: error.emptyCode,
+                            message: errorNote.emptyCode,
                             trigger: 'blur'
                         },
                         {
                             validator: validator.code,
-                            message: error.incorrectCode,
+                            message: errorNote.incorrectCode,
                             trigger: ['blur', 'change']
                         }
                     ]
@@ -241,27 +241,21 @@
                 }
             },
             getCode() {
-                this.$refs.signUpForm.validateField('email', (message) => {
-                    if (message) {
-                        // 如果校验成功，message 为 ''
-                        return;
+                this.$apollo.mutate({
+                    mutation: GenerateVerificationCode,
+                    variables: {
+                        email: this.signUpForm.email
                     }
-                    this.$apollo.mutate({
-                        mutation: GenerateVerificationCode,
-                        variables: {
-                            email: this.signUpForm.email
-                        }
-                    }).then(data => {
-                        let result = data.data.generateVerificationCode;
-                        console.log(result);
-                        if (!result.success) {
-                            alert(JSON.stringify(result.errors));
-                        } else {
-                            this.setTime();
-                        }
-                    }).catch(error => {
-                        alert(JSON.stringify(error));
-                    });
+                }).then(data => {
+                    let result = data.data.generateVerificationCode;
+                    if (!result.success) {
+                        alert(JSON.stringify(result.errors));
+                    } else {
+                        this.setTime();
+                    }
+                }).catch(error => {
+                    alert(errorNote.netWorkError);
+                    console.log(error);
                 });
             },
             register() {
@@ -279,15 +273,13 @@
                         }
                     }).then(data => {
                         let result = data.data.register;
-                        console.log('success');
-                        console.log(result);
                         if (!result.success) {
-                            if (result.errors.code === error.rIncorrectCode) {
-                                alert(error.mIncorrectCode);
-                            } else if (result.errors.username === error.rUsernameExist) {
-                                alert(error.mUsernameExist);
-                            } else if (result.errors.email === error.rEmailExist) {
-                                alert(error.mEmailExist);
+                            if (result.errors.code === errorNote.rIncorrectCode) {
+                                alert(errorNote.mIncorrectCode);
+                            } else if (result.errors.username === errorNote.rUsernameExist) {
+                                alert(errorNote.mUsernameExist);
+                            } else if (result.errors.email === errorNote.rEmailExist) {
+                                alert(errorNote.mEmailExist);
                             } else {
                                 alert(JSON.stringify(result.errors));
                             }
@@ -302,8 +294,8 @@
                             this.$router.push({name:'index'});
                         }
                     }).catch(error => {
-                        console.log('error');
-                        alert(JSON.stringify(error));
+                        alert(errorNote.netWorkError);
+                        console.log(error);
                     });
                 });
             },
@@ -323,13 +315,12 @@
                         }
                     }).then(data => {
                         let result = data.data.login;
-                        console.log(result);
                         if (!result.success) {
                             if (result.errors.nonFieldErrors[0].code === 'invalid_credentials') {
                                 if (this.isUsername) {
-                                    alert(error.mIncorrectUsernameOrPassword);
+                                    alert(errorNote.mIncorrectUsernameOrPassword);
                                 } else {
-                                    alert(error.mIncorrectEmailOrPassword)
+                                    alert(errorNote.mIncorrectEmailOrPassword)
                                 }
                             } else {
                                 alert(JSON.stringify(result.errors));
@@ -345,7 +336,8 @@
                             this.$router.push({name:'index'});
                         }
                     }).catch(error => {
-                        alert(JSON.stringify(error));
+                        alert(errorNote.netWorkError);
+                        console.log(error);
                     });
                 });
             }
@@ -371,7 +363,7 @@
     }
 
     div.el-tabs__active-bar.is-top {
-        background-color: rgb(234, 213, 15);
+        background-color: rgb(234,182,15);
     }
 
     div.el-tabs__item.is-top {
@@ -386,7 +378,7 @@
     }
 
     div.el-tabs__item.is-top.is-active {
-        color: rgb(234, 213, 15);
+        color: rgb(234,182,15);
     }
 
     div.el-tabs__content {

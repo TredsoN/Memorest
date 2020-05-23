@@ -4,8 +4,8 @@
             <defs>
                 <defs>
                     <radialGradient :id="radialGradientId">
-                        <stop offset="0%" :stop-color="innerColor"/>
-                        <stop offset="90%" :stop-color="innerColor"/>
+                        <stop offset="0%" stop-color="#000000"/>
+                        <stop offset="90%" stop-color="#000000"/>
                         <stop offset="91%" :stop-color="outterColor"/>
                         <stop offset="100%" stop-color="#000000"/>
                     </radialGradient>
@@ -55,8 +55,6 @@
 </template>
 
 <script>
-import SetMemoryPrivacy from '../../graphql/MemoryPages/SetPrivacy.graphql'
-import DeleteMemory from '../../graphql/MemoryPages/DeleteMemory.graphql'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { faEye } from '@fortawesome/free-regular-svg-icons';
@@ -95,11 +93,6 @@ export default {
             const audios = this.memory.audio.split(',');
             return audios[audios.length - 2];
         },
-        innerColor() {
-            if(this.memory.subject == "")
-                return 'rgba(255, 255, 0, 0.2)';
-            return 'rgba(0, 170, 255, 0.2)';
-        },
         outterColor() {
             if(this.memory.subject == "")
                 return '#ffff00';
@@ -126,39 +119,6 @@ export default {
                 this.screenHeight = document.documentElement.clientHeight
                 this.screenWidth = window.screenWidth
             })()
-        }
-    },
-    methods: {
-        SetPrivate() {
-            this.$apollo.mutate({
-                mutation: SetMemoryPrivacy,
-                variables: {
-                    memoryId: this.memory.id,
-                    privacy: this.memory.privacy?0:1
-                },
-            }).then(data=>{
-                console.log(data);
-                if(data.data.setMemoryDensity.success){
-                    this.memory.privacy = !this.memory.privacy;
-                }
-            }).catch(error=>{
-                console.log(error);
-            });
-        },
-        DeleteMemory() {
-            this.$apollo.mutate({
-                mutation: DeleteMemory,
-                variables: {
-                    memoryId: this.memory.id,
-                },
-            }).then(data=>{
-                console.log(data);
-                if(data.data.DeleteMemory.success){
-                    this.memory.privacy = !this.memory.privacy;
-                }
-            }).catch(error=>{
-                console.log(error);
-            });
         }
     }
 }

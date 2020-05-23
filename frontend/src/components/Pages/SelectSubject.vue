@@ -101,7 +101,6 @@
                 }
             }).then(data => {
                 let result = data.data.searchSubject;
-                console.log(result);
                 if (!result.success) {
                     alert(JSON.stringify(result.errors));
                 } else {
@@ -109,7 +108,7 @@
                 }
             }).catch(error => {
                 console.log(error);
-                alert(JSON.stringify(error));
+                alert('The network is not in good condition. Please try again later.');
             });
             window.onresize = () => {
             return (() => {

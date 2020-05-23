@@ -53,6 +53,7 @@ export default {
             if(confirm('Confirm to log out?')==true){
                 localStorage.removeItem('user');
                 localStorage.removeItem('token');
+                localStorage.removeItem('refreshToken');
                 this.$router.push({name:'index'});
             }
         }
